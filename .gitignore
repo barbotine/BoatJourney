@@ -1,0 +1,65 @@
+# Fichiers generes par Visual Studio
+.vscode/
+.vs/
+*.vcxproj*
+*.user
+*.suo
+*.ipch
+*.pdb
+*.log
+*.tlog/
+*.obj
+*.idb
+*.sdf
+*.opensdf
+*.opendb
+*.VC.db
+*.VC.opendb
+
+# Dossiers de build
+/Debug/
+/Release/
+/x64/
+/Win32/
+
+# Fichiers generes par CMake (si utilise)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+build/
+
+# Bibliotheques et DLLs de SFML (ne pas suivre les fichiers externes)
+*.dll
+*.lib
+*.exp
+
+# Dossiers de bibliotheques et includes SFML (ne pas suivre)
+lib/
+include/
+
+# Fichiers de package ou de distribution
+*.zip
+*.tar.gz
+*.7z
+*.exe
+
+# Fichiers de configuration utilisateur
+*.directory
+*.cache
+
+# Fichiers systeme ou IDE specifiques
+Thumbs.db
+*.DS_Store
+*.directory
+*.env
+*.ncb
+*.sql
+*.psess
+
+# Autres fichiers inutiles
+*.bak
+*.tmp
+*.old
+*.orig
+*.pyc
+*.pyo
