@@ -6,9 +6,6 @@ void Boat::update(float deltaTime)
 {
 }
 
-void Boat::draw(RenderWindow& window)
-{
-    window.draw(sprite);
-}
+
 
 

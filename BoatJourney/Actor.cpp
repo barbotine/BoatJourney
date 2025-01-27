@@ -1,14 +1,15 @@
 #include "Actor.h"
 #include <SFML/Graphics.hpp>
 
-Actor::Actor(Vector2f position, std::string textureFile) : texture(), sprite(texture)
+Actor::Actor(RenderWindow& window, Vector2f position, string actorTex) : sprite(texture), position(position)
 {
-    if (!texture.loadFromFile("../assets/texture/boat.png")) {
-        throw std::runtime_error("Texture not working" + textureFile);
+    if (!texture.loadFromFile(actorTex)) {
+        throw runtime_error("Texture not working");
     }
 
     sprite.setTexture(texture);
     sprite.setPosition(position);
+    window.draw(sprite);
 }
 
 void Actor::draw(RenderWindow& window)

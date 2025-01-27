@@ -1,19 +1,18 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Actor.h"
 
 using namespace sf;
 using namespace std;
 
-class Cloud
+class Cloud : public Actor
 {
 	private :
-		Vector2f position;
-		Sprite sprite;
-		Texture texture;
+		int speed;
 
-	public : 
-		Cloud(RenderWindow& window);
-
+	public:
+		using Actor::Actor;
+		void draw(RenderWindow& window);
+		void update(float deltaTime);
 };
-

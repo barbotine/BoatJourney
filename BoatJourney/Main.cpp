@@ -1,29 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include "Boat.h"
 #include "Cloud.h"
+#include "Boat.h"
 
 using namespace std;
 using namespace sf;
 
 
-vector<Sprite> manageCloud(RenderWindow& window, Texture& cloudTexture) {
+void manageCloud(RenderWindow& window) {
 
-    vector<Sprite> clouds;
-    if (!cloudTexture.loadFromFile("../assets/texture/cloud.png")) {
-        throw runtime_error("Texture not working");
-    }
-
-    float cloudX = 400.f;
-    float cloudY = window.getSize().y * 0.1f;
-
-    Vector2f cloudPosition(cloudX, cloudY);
-    Sprite cloud(cloudTexture);
-    cloud.setPosition(cloudPosition);
-
-    clouds.push_back(cloud);
-    return clouds;
+    Cloud cloud = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud.png");
+    Cloud cloud2 = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud2.png");
+    Cloud cloud3 = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud3.png");
 }
 
 int main()
@@ -44,8 +33,7 @@ int main()
         ){
         return -1;
     }
- 
-    // Charger le shader
+   
     sf::Shader shader;
 
     if (!shader.loadFromFile("../assets/shaders/water_shader.frag", sf::Shader::Type::Fragment)) {
@@ -53,14 +41,6 @@ int main()
         return -1;
     }
     
-    Vector2f positionBoat(400, 400);
-  
-    float cloudX = 400.f;
-    float cloudY = window.getSize().y * 0.1f;
-
-    Vector2f cloudPosition(cloudX, cloudY);
- /*   Boat boat1;
-    Actor(positionBoat, "../assets/texture/boat.png");*/
     Color color = sf::Color::Blue;
     Clock clock;
     
@@ -79,28 +59,16 @@ int main()
         shader.setUniform("time", time);
         shader.setUniform("resolution", sf::Vector2f(window.getSize()));
         shader.setUniform("backgroundTex", bg);
-
-        Texture cloudTexture;
-        vector<Sprite> clouds;
-        clouds = manageCloud(window, cloudTexture);
         
-        
-
         window.clear();
         window.draw(background, &shader);
-        Cloud cloud = Cloud(window);
-        window.draw(cloud.getSprite());
 
-
-     /*   boat1.draw(window);*/
-
-
-       /* for (int i = 0; i < clouds.size(); i++)
-        {
-            window.draw(clouds[i]);
-        }*/
+        Cloud cloud = Cloud(window, Vector2f(0.f, 0.f), "../assets/texture/cloud.png");
+        Cloud cloud2 = Cloud(window, Vector2f(600.f, 0.f), "../assets/texture/cloud3.png");
+        Cloud cloud3 = Cloud(window, Vector2f(600.f, 400.f), "../assets/texture/cloud2.png");
+        Boat boat = Boat(window, Vector2f(400.f, 400.f), "../assets/texture/boat.png");
 
         window.display();
-    }
+    }  
     return 0; 
 }

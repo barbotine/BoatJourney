@@ -1,14 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Actor.h"
+
+using namespace sf;
+using namespace std;
 
 class Boat : public Actor
 {
-	private:
-		Vector2f position;
 
 	public:
-		void update(float deltaTime) override;
-		void draw(RenderWindow& window);
+		using Actor::Actor;
+		void update(float deltaTime);
 };
 
