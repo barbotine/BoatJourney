@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include <SFML/Graphics.hpp>
 
-Actor::Actor(RenderWindow& window, Vector2f position, string actorTex) : sprite(texture), position(position)
+Actor::Actor(RenderWindow& window, Vector2f position, string actorTex) : sprite(texture), position(position), texture()
 {
     if (!texture.loadFromFile(actorTex)) {
         throw runtime_error("Texture not working");
@@ -9,7 +9,6 @@ Actor::Actor(RenderWindow& window, Vector2f position, string actorTex) : sprite(
 
     sprite.setTexture(texture);
     sprite.setPosition(position);
-    window.draw(sprite);
 }
 
 void Actor::draw(RenderWindow& window)

@@ -13,6 +13,5 @@ class Cloud : public Actor
 
 	public:
 		using Actor::Actor;
-		void draw(RenderWindow& window);
 		void update(float deltaTime);
 };

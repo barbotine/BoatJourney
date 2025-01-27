@@ -9,10 +9,17 @@ using namespace sf;
 
 
 void manageCloud(RenderWindow& window) {
+    vector<Cloud> clouds;
+    Cloud cloud = Cloud(window, Vector2f(500.f, 200.f), "../assets/texture/cloud.png");
+    Cloud cloud2 = Cloud(window, Vector2f(0.f, 0.f), "../assets/texture/cloud2.png");
 
-    Cloud cloud = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud.png");
-    Cloud cloud2 = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud2.png");
-    Cloud cloud3 = Cloud(window, Vector2f(400.f, 400.f), "../assets/texture/cloud3.png");
+    clouds.push_back(cloud);
+    clouds.push_back(cloud2);
+
+    for (Cloud& cloud : clouds)
+    {
+        cloud.draw(window);
+    }
 }
 
 int main()
@@ -28,9 +35,7 @@ int main()
     background.setPosition(backgroundPosition);
 
     sf::Texture bg, cloudTexture;
-    if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
-        !cloudTexture.loadFromFile("../assets/texture/cloud.png")
-        ){
+    if (!bg.loadFromFile("../assets/texture/bg.jpg")){
         return -1;
     }
    
@@ -62,11 +67,26 @@ int main()
         
         window.clear();
         window.draw(background, &shader);
-
-        Cloud cloud = Cloud(window, Vector2f(0.f, 0.f), "../assets/texture/cloud.png");
-        Cloud cloud2 = Cloud(window, Vector2f(600.f, 0.f), "../assets/texture/cloud3.png");
-        Cloud cloud3 = Cloud(window, Vector2f(600.f, 400.f), "../assets/texture/cloud2.png");
         Boat boat = Boat(window, Vector2f(400.f, 400.f), "../assets/texture/boat.png");
+        boat.draw(window);
+
+        //manageCloud(window);
+
+        vector<Cloud> clouds;
+        Cloud cloud = Cloud(window, Vector2f(500.f, 200.f), "../assets/texture/cloud.png");
+        Cloud cloud2 = Cloud(window, Vector2f(0.f, 0.f), "../assets/texture/cloud3.png");
+        Cloud cloud3 = Cloud(window, Vector2f(500.f, 0.f), "../assets/texture/cloud.png");
+        Cloud cloud4 = Cloud(window, Vector2f(1000.f, 0.f), "../assets/texture/cloud3.png");
+
+        clouds.push_back(cloud);
+        clouds.push_back(cloud2);
+        clouds.push_back(cloud3);
+        clouds.push_back(cloud4);
+
+        for (Cloud& cloud : clouds)
+        {
+            cloud.draw(window);
+        }
 
         window.display();
     }  
