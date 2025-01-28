@@ -73,7 +73,7 @@ int main()
        
         for (Cloud& cloud : clouds)
         {
-            cloud.update();
+            cloud.update(window);
             cloud.draw(window);
         }
 

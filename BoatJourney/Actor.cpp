@@ -28,7 +28,5 @@ void Actor::draw(RenderWindow& window)
 
 void Actor::centerSpriteOrigin(Sprite &sprite)
 {
-    float boatWidth = sprite.getLocalBounds().size.x / 2;
-    float boatHeight = sprite.getLocalBounds().size.y / 2;
     sprite.setOrigin(sprite.getLocalBounds().size / 2.0f);
 }
