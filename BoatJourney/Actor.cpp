@@ -26,7 +26,17 @@ void Actor::draw(RenderWindow& window)
     window.draw(sprite);
 }
 
-void Actor::centerSpriteOrigin(Sprite &sprite)
+Vector2f Actor::getPosition()
+{
+    return Vector2f();
+}
+
+void Actor::setPosition(Vector2f position)
+{
+    sprite.setPosition(position);
+}
+
+void Actor::centerSpriteOrigin()
 {
     sprite.setOrigin(sprite.getLocalBounds().size / 2.0f);
 }

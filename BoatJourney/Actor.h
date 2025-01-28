@@ -18,7 +18,9 @@ class Actor
 		Actor(Vector2f position, Texture& actorTex);
 		virtual void update(float deltaTime);
 		void draw(RenderWindow& window);
-		void centerSpriteOrigin(Sprite& sprite);
+		Vector2f getPosition();
+		void setPosition(Vector2f position);
+		void centerSpriteOrigin();
 		virtual ~Actor() = default;
 };
 
