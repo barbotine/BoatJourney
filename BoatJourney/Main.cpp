@@ -27,10 +27,10 @@ int main()
         return -1;
     }
     vector<Cloud> clouds;
-    Cloud cloud = Cloud(Vector2f(500.f, 200.f), cloudTex1, 50);
-    Cloud cloud2 = Cloud(Vector2f(0.f, 0.f), cloudTex2, 50);
-    Cloud cloud3 = Cloud(Vector2f(500.f, 0.f), cloudTex1, 50);
-    Cloud cloud4 = Cloud(Vector2f(1000.f, 0.f), cloudTex2, 50);
+    Cloud cloud = Cloud(Vector2f(0.f, 0.f), cloudTex1, 50);
+    Cloud cloud2 = Cloud(Vector2f(500.f, 0.f), cloudTex2, 50);
+    Cloud cloud3 = Cloud(Vector2f(900.f, 0.f), cloudTex1, 50);
+    Cloud cloud4 = Cloud(Vector2f(1400.f, 0.f), cloudTex2, 50);
 
     clouds.push_back(cloud);
     clouds.push_back(cloud2);
