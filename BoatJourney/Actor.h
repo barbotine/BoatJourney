@@ -14,9 +14,9 @@ class Actor
 		Texture texture;
 
 	public:
-		Actor(RenderWindow& window, Vector2f position, string actorTex);
-
-		virtual void update(float deltaTime) = 0;
+		Actor(Vector2f position, string actorTex);
+		Actor(Vector2f position, Texture& actorTex);
+		virtual void update(float deltaTime);
 		void draw(RenderWindow& window);
 		void centerSpriteOrigin(Sprite& sprite);
 		virtual ~Actor() = default;

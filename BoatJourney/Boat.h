@@ -8,7 +8,6 @@ using namespace std;
 
 class Boat : public Actor
 {
-
 	public:
 		using Actor::Actor;
 		void update(float deltaTime);

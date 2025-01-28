@@ -13,5 +13,7 @@ class Cloud : public Actor
 
 	public:
 		using Actor::Actor;
-		void update(float deltaTime);
+		Cloud(Vector2f position, string actorTex, Texture& texture, int speed);
+		Cloud(Vector2f position, Texture& texture, int speed);
+		void update();
 };
