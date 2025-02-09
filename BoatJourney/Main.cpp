@@ -51,7 +51,6 @@ int main()
     clouds.push_back(cloud3);
     clouds.push_back(cloud4);
 
-   
     sf::Shader shader;
     if (!shader.loadFromFile("../assets/shaders/water_shader.frag", sf::Shader::Type::Fragment)) {
         std::cerr << "Erreur lors du chargement du shader !" << std::endl;
@@ -60,7 +59,6 @@ int main()
     
     Color color = sf::Color::Blue;
     Clock clock;
-
 
     float time = clock.getElapsedTime().asSeconds();
     
@@ -73,21 +71,19 @@ int main()
         }
 
         time = clock.getElapsedTime().asSeconds();
-       
       
         shader.setUniform("time", time);
         shader.setUniform("resolution", sf::Vector2f(window.getSize()));
         shader.setUniform("backgroundTex", bg);
-       
-  
+
         Vector2f resolution(window.getSize().x, window.getSize().y);
-        Boat boat = Boat(Vector2f(400.f, 400.f), "../assets/texture/boat.png");
+     
+        Boat boat = Boat(Vector2f(0.f, 0.f), "../assets/texture/boat.png");
         boat.centerSpriteOrigin();
         float boatX = boat.getPosition().x / resolution.x;
         float waveHeight = calculateWaveHeight(boatX, time);
 
-        boat.setPosition(Vector2f(boat.getPosition().x, (resolution.y / 2.f) + waveHeight * resolution.y));
-
+        boat.setPosition(Vector2f(boatX + 700, (resolution.y / 2.f) + waveHeight * (resolution.y + 400)));
 
         window.clear();
         window.draw(background, &shader);

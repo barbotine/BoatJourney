@@ -1,16 +1,27 @@
-#version 330 core
+#version 330 core //Using GLSL version 330 compatible with OpenGL 3.3
 
 uniform float time;
 uniform vec2 resolution;   
 uniform sampler2D backgroundTex;
 uniform float textureScale;
 
+// Axes dans le même référentiel
+// x vérifié référentiel
+// Jouer avec les couleurs
+
+/*
+* uv - horizontal texture coordinates
+* frequency - number of waves
+* amplitude - wave height
+* speed - wave speed
+* phase - wave phase 
+*/
 float wave(vec2 uv, float frequency, float amplitude, float speed, float phase) {
     return sin(uv.x * frequency + time * speed + phase) * amplitude;
 }
 
 void main() {
-    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 uv = gl_FragCoord.xy / resolution.xy; // 
 
     uv.y = 1.0 - uv.y;
 
