@@ -9,12 +9,12 @@ using namespace std;
 class Cloud : public Actor
 {
 	private :
-		int speed;
+		float speed;
 
 	public:
 		using Actor::Actor;
-		Cloud(Vector2f position, string actorTex, Texture& texture, int speed);
-		Cloud(Vector2f position, Texture& texture, int speed);
+		Cloud(Vector2f position, string actorTex, Texture& texture, float speed);
+		Cloud(Vector2f position, Texture& texture, float speed);
 		void update(RenderWindow& window);
 		bool cloudIsVisible(RenderWindow& window);
 };

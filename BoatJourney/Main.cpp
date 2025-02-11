@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Cloud.h"
 #include "Boat.h"
+#include "Sun.h"
 
 using namespace std;
 using namespace sf;
@@ -33,23 +34,27 @@ int main()
     RectangleShape background(sf::Vector2f(window.getSize()));
     Vector2f backgroundPosition(0.f, 0.f);
     background.setPosition(backgroundPosition);
+    Vector2f positionSun;
 
-    sf::Texture bg, cloudTex1, cloudTex2;
+
+    sf::Texture bg, cloudText1, cloudText2, sunText;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
-        !cloudTex1.loadFromFile("../assets/texture/cloud.png") ||
-        !cloudTex2.loadFromFile("../assets/texture/cloud3.png")) {
+        !cloudText1.loadFromFile("../assets/texture/cloud.png") ||
+        !cloudText2.loadFromFile("../assets/texture/cloud3.png")|| 
+        !sunText.loadFromFile("../assets/texture/sun.png")) {
         return -1;
     }
     vector<Cloud> clouds;
-    Cloud cloud = Cloud(Vector2f(0.f, 0.f), cloudTex1, 50);
-    Cloud cloud2 = Cloud(Vector2f(500.f, 0.f), cloudTex2, 50);
-    Cloud cloud3 = Cloud(Vector2f(900.f, 0.f), cloudTex1, 50);
-    Cloud cloud4 = Cloud(Vector2f(1400.f, 0.f), cloudTex2, 50);
-
+    Cloud cloud = Cloud(Vector2f(0.f, 0.f), cloudText1, 0.5);
+    Cloud cloud2 = Cloud(Vector2f(500.f, 0.f), cloudText2, 0.5);
+    Cloud cloud3 = Cloud(Vector2f(900.f, 0.f), cloudText1, 0.5);
+    Cloud cloud4 = Cloud(Vector2f(1400.f, 0.f), cloudText2, 0.5);
+    
     clouds.push_back(cloud);
     clouds.push_back(cloud2);
     clouds.push_back(cloud3);
     clouds.push_back(cloud4);
+    
 
     sf::Shader shader;
     if (!shader.loadFromFile("../assets/shaders/water_shader.frag", sf::Shader::Type::Fragment)) {
@@ -79,7 +84,9 @@ int main()
         Vector2f resolution(window.getSize().x, window.getSize().y);
      
         Boat boat = Boat(Vector2f(0.f, 0.f), "../assets/texture/boat.png");
+        Sun sun = Sun(Vector2f(0, 0.f), sunText, 0.2);
         boat.centerSpriteOrigin();
+        sun.centerSpriteOrigin();
         float boatX = boat.getPosition().x / resolution.x;
         float waveHeight = calculateWaveHeight(boatX, time);
 
@@ -89,7 +96,12 @@ int main()
         window.draw(background, &shader);
        
         boat.draw(window);
-       
+        
+        positionSun += Vector2f(1, 0) * 0.6f;
+        sun.setPosition(positionSun);
+        //sun.update(window);
+        sun.draw(window);
+        
         for (Cloud& cloud : clouds)
         {
             cloud.update(window);
