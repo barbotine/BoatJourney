@@ -54,6 +54,10 @@ int main()
     clouds.push_back(cloud2);
     clouds.push_back(cloud3);
     clouds.push_back(cloud4);
+
+    vector<Sun> suns;
+    Sun sun = Sun(Vector2f(0.f, 0.f), sunText, 0.3);
+    suns.push_back(sun);
     
 
     sf::Shader shader;
@@ -97,17 +101,19 @@ int main()
        
         boat.draw(window);
         
-        positionSun += Vector2f(1, 0) * 0.6f;
-        sun.setPosition(positionSun);
-        //sun.update(window);
-        sun.draw(window);
-        
+        for (Sun& sun : suns)
+        {
+            sun.update(window);
+            sun.draw(window);
+        }
+
         for (Cloud& cloud : clouds)
         {
             cloud.update(window);
             cloud.draw(window);
         }
 
+      
         window.display();
     }  
     return 0; 
