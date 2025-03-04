@@ -5,6 +5,7 @@
 #include "Cloud.h"
 #include "Boat.h"
 #include "Sun.h"
+#include "CloudManager.h"
 
 using namespace std;
 using namespace sf;
@@ -36,30 +37,17 @@ int main()
     background.setPosition(backgroundPosition);
     Vector2f positionSun;
 
-
-    sf::Texture bg, cloudText1, cloudText2, sunText;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud3.png")|| 
-        !sunText.loadFromFile("../assets/texture/sun.png")) {
+        !sunText.loadFromFile("../assets/texture/sun.png") ||
+        !boatTexture.loadFromFile("../assets/texture/boat.png")) {
         return -1;
     }
-    vector<Cloud> clouds;
-    Cloud cloud = Cloud(Vector2f(0.f, 0.f), cloudText1, 0.5);
-    Cloud cloud2 = Cloud(Vector2f(500.f, 0.f), cloudText2, 0.5);
-    Cloud cloud3 = Cloud(Vector2f(900.f, 0.f), cloudText1, 0.5);
-    Cloud cloud4 = Cloud(Vector2f(1400.f, 0.f), cloudText2, 0.5);
+    CloudManager cloudService = CloudManager();
+    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
     
-    clouds.push_back(cloud);
-    clouds.push_back(cloud2);
-    clouds.push_back(cloud3);
-    clouds.push_back(cloud4);
-
-    vector<Sun> suns;
-    Sun sun = Sun(Vector2f(0.f, 0.f), sunText, 0.3);
-    suns.push_back(sun);
-    
-
     sf::Shader shader;
     if (!shader.loadFromFile("../assets/shaders/water_shader.frag", sf::Shader::Type::Fragment)) {
         std::cerr << "Erreur lors du chargement du shader !" << std::endl;
@@ -70,6 +58,9 @@ int main()
     Clock clock;
 
     float time = clock.getElapsedTime().asSeconds();
+
+    Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
+    Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.1);
     
     while(window.isOpen())
     {
@@ -87,10 +78,8 @@ int main()
 
         Vector2f resolution(window.getSize().x, window.getSize().y);
      
-        Boat boat = Boat(Vector2f(0.f, 0.f), "../assets/texture/boat.png");
-        Sun sun = Sun(Vector2f(0, 0.f), sunText, 0.2);
+        
         boat.centerSpriteOrigin();
-        sun.centerSpriteOrigin();
         float boatX = boat.getPosition().x / resolution.x;
         float waveHeight = calculateWaveHeight(boatX, time);
 
@@ -101,11 +90,9 @@ int main()
        
         boat.draw(window);
         
-        for (Sun& sun : suns)
-        {
-            sun.update(window);
-            sun.draw(window);
-        }
+       
+        sun.update(window);
+        sun.draw(window);
 
         for (Cloud& cloud : clouds)
         {

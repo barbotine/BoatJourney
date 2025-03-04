@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include <SFML/Graphics.hpp>
 
-Actor::Actor(Vector2f position, string actorTex) : sprite(texture), position(position), texture()
+Actor::Actor(Vector2f position, string &actorTex) : sprite(texture), position(position), texture()
 {
     if (!texture.loadFromFile(actorTex))
     {

@@ -14,7 +14,7 @@ class Actor
 		Texture texture;
 
 	public:
-		Actor(Vector2f position, string actorTex);
+		Actor(Vector2f position, string& actorTex);
 		Actor(Vector2f position, Texture& actorTex);
 		virtual void update(float deltaTime);
 		void draw(RenderWindow& window);
