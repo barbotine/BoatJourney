@@ -38,7 +38,17 @@ public:
     }
 
     bool isClicked(sf::RenderWindow& window) {
-        return isMouseOver(window) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+        bool currentlyPressed = isMouseOver(window) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+        if (currentlyPressed && !wasPressed) {
+            wasPressed = true;  
+            return true;        
+        }
+        if (!currentlyPressed) {
+            wasPressed = false;
+        }
+
+        return false;
     }
 
 
@@ -46,6 +56,7 @@ private:
     sf::RectangleShape shape;
     sf::Font font;
     sf::Text text;
+    bool wasPressed = false;
 };
 
 

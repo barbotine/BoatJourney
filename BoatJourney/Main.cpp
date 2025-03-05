@@ -56,7 +56,8 @@ int main()
     Clock clock;
     float time = clock.getElapsedTime().asSeconds();
 
-    Button solarActivityButton = Button(1600, 900, 100, 50, Color::Blue, "Coucou");
+    Button solarActivityButton = Button(1600, 900, 150, 50, Color::Blue, "Solar Panel");
+   
 
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.03);
@@ -67,6 +68,10 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
+        }
+
+        if (solarActivityButton.isClicked(window)) {
+            std::cout << "Bouton cliqué !\n";
         }
 
         time = clock.getElapsedTime().asSeconds();
