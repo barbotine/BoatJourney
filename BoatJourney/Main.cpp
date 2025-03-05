@@ -6,6 +6,7 @@
 #include "Sun.h"
 #include "CloudManager.h"
 #include "SeaManager.h"
+#include "Button.h"
 
 using namespace std;
 using namespace sf;
@@ -55,6 +56,9 @@ int main()
     Clock clock;
     float time = clock.getElapsedTime().asSeconds();
 
+    Button solarActivityButton = Button(1600, 900, 150, 50, Color::Blue, "Solar Panel");
+   
+
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.03);
     
@@ -64,6 +68,10 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
+        }
+
+        if (solarActivityButton.isClicked(window)) {
+            std::cout << "Bouton cliqué !\n";
         }
 
         time = clock.getElapsedTime().asSeconds();
@@ -76,11 +84,12 @@ int main()
         boat.setOriginToBottomCenter();
         float waveHeight = seaService.calculateWaveHeight(boatX, time);
 
-        boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f)+ waveHeight * resolution.y));
+        boat.setPosition(Vector2f(boatX, boat.getPosition().y + (resolution.y / 2.f)+ waveHeight * resolution.y));
 
         window.clear();
         window.draw(background, &shader);
-       
+        solarActivityButton.draw(window);
+
         boat.draw(window);
         
         sun.update(window);
