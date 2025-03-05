@@ -20,7 +20,8 @@ class Actor
 		void draw(RenderWindow& window);
 		Vector2f getPosition();
 		void setPosition(Vector2f position);
-		void centerSpriteOrigin();
+		void setOriginToCenterSpriteOrigin();
+		void setOriginToBottomCenter();
 		virtual ~Actor() = default;
 };
 

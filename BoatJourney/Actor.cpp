@@ -36,7 +36,14 @@ void Actor::setPosition(Vector2f position)
     sprite.setPosition(position);
 }
 
-void Actor::centerSpriteOrigin()
+void Actor::setOriginToCenterSpriteOrigin()
 {
     sprite.setOrigin(sprite.getLocalBounds().size / 2.0f);
+}
+
+void Actor::setOriginToBottomCenter()
+{
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sf::Vector2f newOrigin(bounds.size.x / 2.f, bounds.size.y * 0.85);
+    sprite.setOrigin(newOrigin); 
 }

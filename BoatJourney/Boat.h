@@ -11,5 +11,6 @@ class Boat : public Actor
 	public:
 		using Actor::Actor;
 		void update(float deltaTime);
+		Vector2f manageBoatPosition();
 };
 
