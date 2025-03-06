@@ -7,6 +7,7 @@
 #include "CloudManager.h"
 #include "SeaManager.h"
 #include "Button.h"
+#include "Character.h"
 
 using namespace std;
 using namespace sf;
@@ -38,16 +39,16 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
-        !cloudText1.loadFromFile("../assets/texture/cloud.png") ||
-        !cloudText2.loadFromFile("../assets/texture/cloud3.png")|| 
+        !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
+        !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
         !sunText.loadFromFile("../assets/texture/sun.png") ||
-        !boatTexture.loadFromFile("../assets/texture/boat.png")) {
-        return -1;
+        !boatTexture.loadFromFile("../assets/texture/boat.png") ||
+        !characterTexture.loadFromFile("../assets/texture/sailor.png")
+        ) {
+        throw "Can't load";
     }
-    CloudManager cloudService = CloudManager();
-    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
     
     sf::Shader shader;
     if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
@@ -56,9 +57,10 @@ int main()
     Clock clock;
     float time = clock.getElapsedTime().asSeconds();
 
-    Button solarActivityButton = Button(1600, 900, 150, 50, Color::Blue, "Solar Panel");
-   
-
+    Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
+    CloudManager cloudService = CloudManager();
+    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
+    Character character = Character(Vector2f(1800.f, 750.f), characterTexture);
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.03);
     
@@ -71,7 +73,7 @@ int main()
         }
 
         if (solarActivityButton.isClicked(window)) {
-            std::cout << "Bouton cliqué !\n";
+            character.setSolarRessources(true);
         }
 
         time = clock.getElapsedTime().asSeconds();
@@ -91,6 +93,7 @@ int main()
         solarActivityButton.draw(window);
 
         boat.draw(window);
+        character.draw(window);
         
         sun.update(window);
         sun.draw(window);
