@@ -3,33 +3,71 @@ Sun::Sun(Vector2f position, string actorTex, Texture& texture, float speed) : Ac
 {
     sprite.setTexture(texture);
     sprite.setPosition(position);
+    this->isVisible = true;
 }
 
 Sun::Sun(Vector2f position, Texture& texture, float speed) : Actor(position, texture), speed(speed)
 {
     sprite.setTexture(texture);
     sprite.setPosition(position);
+    this->isVisible = true;
+}
+
+
+float Sun::generateRandomTime() {
+    return 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (5.0f - 1.0f)));
 }
 
 void Sun::update(RenderWindow& window)
 {
-    bool CloudInsideWindow = sunIsVisible(window);
-
-    if (!CloudInsideWindow)
+    float invisibleDuration;
+    srand(static_cast<unsigned>(time(0)));
+    invisibleDuration = generateRandomTime();
+   
+    if (!isInsideWindow(window))
     {
         position = Vector2f(0.f, 0.f);
+        makeSunInvisible(window);
     }
     else
     {
         position += Vector2f(1, 0) * speed;
+        makeSunVisible(window, invisibleDuration);
     }
 
     sprite.setPosition(position);
 }
 
-bool Sun::sunIsVisible(RenderWindow& window)
+bool Sun::isInsideWindow(RenderWindow& window)
 {
     Vector2f position = sprite.getPosition();
     Vector2u windowSize = window.getSize();
     return windowSize.x > position.x;
+}
+
+void Sun::makeSunInvisible(RenderWindow& windowr)
+{
+    bool timerStarted = false;
+   
+    if (!timerStarted)
+    {
+        timer.restart();
+        timerStarted = true;
+    }
+    sprite.setColor(Color(255, 255, 255, 0));
+    position = Vector2f(0.f, 0.f);
+    this->isVisible = false;
+}
+
+void Sun::makeSunVisible(RenderWindow& window, float sunAppearingTime)
+{  
+    if (timer.getElapsedTime().asSeconds() >= sunAppearingTime) {
+        sprite.setColor(sf::Color(255, 255, 255, 255));
+        this->isVisible = true;
+    }
+}
+
+bool Sun::getIsVisible()
+{
+    return this->isVisible;
 }

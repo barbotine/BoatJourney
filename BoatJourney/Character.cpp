@@ -10,23 +10,22 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
     this->water = 10;
 }
 
-bool Character::isSunVisible(Sun& sun, RenderWindow& window)
+bool Character::isSunInsideWindow(Sun& sun, RenderWindow& window)
 {
-    cout << "Sun is visible" << endl;
-    if(sun.sunIsVisible(window))
+    if(sun.getIsVisible())
     {
-        cout << "Sun is visible" << endl;
+        cout << "Il est visible et dans la fenêtre" << endl;
     }
     else 
     {
-        cout << "Sun is not visible" << endl;
+        cout << "Il est invisible" << endl;
     }
-    return sun.sunIsVisible(window);
+    return sun.getIsVisible();
 }
 
 void Character::makingSolarEnergy(Sun& sun, RenderWindow& window)
 {
-    if (isSunVisible(sun, window) && isMaxRessourceNotReach(solarRessource))
+    if (isSunInsideWindow(sun, window) && isMaxRessourceNotReach(solarRessource))
     {
         cout << "Adding solar ressource" << endl;
         ++solarRessource;
