@@ -10,15 +10,30 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
     this->water = 10;
 }
 
-void Character::setSolarRessources(bool isGeneratedSolarEnergy)
+bool Character::isSunVisible(Sun& sun, RenderWindow& window)
 {
-    if (isGeneratedSolarEnergy && maxRessourcesAlllowed(solarRessource)) {
-        ++solarRessource;
+    cout << "Sun is visible" << endl;
+    if(sun.sunIsVisible(window))
+    {
+        cout << "Sun is visible" << endl;
     }
-    std::cout << "Number of solar energy: " << solarRessource << std::endl;
+    else 
+    {
+        cout << "Sun is not visible" << endl;
+    }
+    return sun.sunIsVisible(window);
 }
 
-bool Character::maxRessourcesAlllowed(int ressource)
+void Character::makingSolarEnergy(Sun& sun, RenderWindow& window)
+{
+    if (isSunVisible(sun, window) && isMaxRessourceNotReach(solarRessource))
+    {
+        cout << "Adding solar ressource" << endl;
+        ++solarRessource;
+    }
+}
+
+bool Character::isMaxRessourceNotReach(int ressource)
 {
     return ressource <= 9;
 }

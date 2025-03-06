@@ -62,7 +62,7 @@ int main()
     vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
     Character character = Character(Vector2f(1800.f, 750.f), characterTexture);
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
-    Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.03);
+    Sun sun = Sun(Vector2f(100, 500.f), sunText, 1);
     
     while(window.isOpen())
     {
@@ -73,7 +73,7 @@ int main()
         }
 
         if (solarActivityButton.isClicked(window)) {
-            character.setSolarRessources(true);
+            character.makingSolarEnergy(sun, window);
         }
 
         time = clock.getElapsedTime().asSeconds();

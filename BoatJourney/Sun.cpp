@@ -31,6 +31,5 @@ bool Sun::sunIsVisible(RenderWindow& window)
 {
     Vector2f position = sprite.getPosition();
     Vector2u windowSize = window.getSize();
-
     return windowSize.x > position.x;
 }

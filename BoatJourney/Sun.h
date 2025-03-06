@@ -7,6 +7,8 @@
 using namespace sf;
 using namespace std;
 
+class Character;
+
 class Sun : public Actor
 {
 private:
@@ -19,5 +21,6 @@ public:
 	Sun(Vector2f position, Texture& texture, float speed);
 	void update(RenderWindow& window);
 	bool sunIsVisible(RenderWindow& window);
+	friend class Character;
 };
 
