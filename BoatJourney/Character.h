@@ -15,10 +15,11 @@ class Character : public Actor
 		void makingSolarEnergy(Sun& sun, RenderWindow& window);
 		bool isMaxResourceNotReach(int resource);
 		int getSolarResource();
+		int getLifespan();
 
 	private:
 		int solarResource;
-		int life;
+		int lifespan;
 		int food;
 		int water;
 };

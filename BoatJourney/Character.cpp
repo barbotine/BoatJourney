@@ -5,7 +5,7 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
     sprite.setTexture(texture);
     sprite.setPosition(position);
     this->solarResource = 0;
-    this->life = 10;
+    this->lifespan = 3;
     this->food = 10;
     this->water = 10;
 }
@@ -29,5 +29,10 @@ int Character::getSolarResource()
     return solarResource;
 }
 
+
+int Character::getLifespan()
+{
+    return lifespan;
+}
 
 
