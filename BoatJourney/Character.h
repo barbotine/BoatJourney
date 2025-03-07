@@ -14,6 +14,7 @@ class Character : public Actor
 		Character(Vector2f position, Texture& texture);
 		void makingSolarEnergy(Sun& sun, RenderWindow& window);
 		bool isMaxResourceNotReach(int resource);
+		int getSolarResource();
 
 	private:
 		int solarResource;

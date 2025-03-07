@@ -24,5 +24,10 @@ bool Character::isMaxResourceNotReach(int resource)
     return resource <= 9;
 }
 
+int Character::getSolarResource()
+{
+    return solarResource;
+}
+
 
 
