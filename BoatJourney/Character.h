@@ -12,7 +12,6 @@ class Character : public Actor
 {
 	public:
 		Character(Vector2f position, Texture& texture);
-		bool isSunInsideWindow(Sun& sun, RenderWindow& window);
 		void makingSolarEnergy(Sun& sun, RenderWindow& window);
 		bool isMaxRessourceNotReach(int ressource);
 
