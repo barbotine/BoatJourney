@@ -4,7 +4,7 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
 {
     sprite.setTexture(texture);
     sprite.setPosition(position);
-    this->solarRessource = 0;
+    this->solarResource = 0;
     this->life = 10;
     this->food = 10;
     this->water = 10;
@@ -12,16 +12,16 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
 
 void Character::makingSolarEnergy(Sun &sun, RenderWindow& window)
 {
-    if (sun.getIsVisible() && isMaxRessourceNotReach(solarRessource))
+    if (sun.getIsVisible() && isMaxResourceNotReach(solarResource))
     {
-        cout << "Adding solar ressource" << endl;
-        ++solarRessource;
+        cout << "Adding solar resource" << endl;
+        ++solarResource;
     }
 }
 
-bool Character::isMaxRessourceNotReach(int ressource)
+bool Character::isMaxResourceNotReach(int resource)
 {
-    return ressource <= 9;
+    return resource <= 9;
 }
 
 

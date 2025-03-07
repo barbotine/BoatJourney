@@ -8,6 +8,7 @@
 #include "SeaManager.h"
 #include "Button.h"
 #include "Character.h"
+#include "Resource.h"
 
 using namespace std;
 using namespace sf;
@@ -39,13 +40,14 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, heartTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
         !sunText.loadFromFile("../assets/texture/sun.png") ||
         !boatTexture.loadFromFile("../assets/texture/boat.png") ||
-        !characterTexture.loadFromFile("../assets/texture/sailor.png")
+        !characterTexture.loadFromFile("../assets/texture/sailor.png") ||
+        !heartTexture.loadFromFile("../assets/texture/heart.png")
         ) {
         throw "Can't load";
     }
@@ -63,6 +65,7 @@ int main()
     Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2);
+    Resource heart = Resource(Vector2f(1700.f, 780.f), heartTexture);
     
     while(window.isOpen())
     {
@@ -94,9 +97,12 @@ int main()
 
         boat.draw(window);
         character.draw(window);
-        
+        heart.draw(window);
+
         sun.update(window);
         sun.draw(window);
+
+        heart.draw(window);
 
         for (Cloud& cloud : clouds)
         {

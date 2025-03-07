@@ -13,10 +13,10 @@ class Character : public Actor
 	public:
 		Character(Vector2f position, Texture& texture);
 		void makingSolarEnergy(Sun& sun, RenderWindow& window);
-		bool isMaxRessourceNotReach(int ressource);
+		bool isMaxResourceNotReach(int resource);
 
 	private:
-		int solarRessource;
+		int solarResource;
 		int life;
 		int food;
 		int water;
