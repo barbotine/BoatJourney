@@ -25,7 +25,6 @@ public:
 	Sun(Vector2f position, string actorTex, Texture& texture, float speed);
 	Sun(Vector2f position, Texture& texture, float speed);
 	void update(RenderWindow& window);
-	bool isInsideWindow(RenderWindow& window);
 	void makeSunInvisible(RenderWindow& window);
 	void makeSunVisible(RenderWindow& window, float sunAppearingTime);
 	float generateRandomTime();

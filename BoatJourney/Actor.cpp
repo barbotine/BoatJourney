@@ -47,3 +47,17 @@ void Actor::setOriginToBottomCenter()
     sf::Vector2f newOrigin(bounds.size.x / 2.f, bounds.size.y * 0.85);
     sprite.setOrigin(newOrigin); 
 }
+
+bool Actor::isInsideWindowFromRight(RenderWindow& window)
+{
+    Vector2f position = sprite.getPosition();
+    return position.x + sprite.getGlobalBounds().size.x > 0;
+}
+
+bool Actor::isInsideWindowFromLeft(RenderWindow& window)
+{
+    Vector2f position = sprite.getPosition();
+    Vector2u windowSize = window.getSize();
+    return position.x < windowSize.x;
+}
+

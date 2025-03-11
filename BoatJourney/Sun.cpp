@@ -13,7 +13,6 @@ Sun::Sun(Vector2f position, Texture& texture, float speed) : Actor(position, tex
     this->isVisible = true;
 }
 
-
 float Sun::generateRandomTime() {
     return 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (5.0f - 1.0f)));
 }
@@ -24,7 +23,7 @@ void Sun::update(RenderWindow& window)
     srand(static_cast<unsigned>(time(0)));
     invisibleDuration = generateRandomTime();
    
-    if (!isInsideWindow(window))
+    if (!isInsideWindowFromLeft(window))
     {
         position = Vector2f(0.f, 0.f);
         makeSunInvisible(window);
@@ -36,13 +35,6 @@ void Sun::update(RenderWindow& window)
     }
 
     sprite.setPosition(position);
-}
-
-bool Sun::isInsideWindow(RenderWindow& window)
-{
-    Vector2f position = sprite.getPosition();
-    Vector2u windowSize = window.getSize();
-    return windowSize.x > position.x;
 }
 
 void Sun::makeSunInvisible(RenderWindow& windowr)

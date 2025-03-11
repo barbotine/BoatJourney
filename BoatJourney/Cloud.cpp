@@ -16,24 +16,7 @@ Cloud::Cloud(Vector2f position, Texture& texture, float speed) : Actor(position,
 
 void Cloud::update(RenderWindow& window)
 {
-    bool CloudInsideWindow = cloudIsVisible(window);
-
-    if (!CloudInsideWindow)
-    {
-        position = Vector2f(0.f, 0.f);
-    }
-    else
-    {
-        position += Vector2f(1, 0) * speed;
-    }
-
+    position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
     sprite.setPosition(position);
 }
 
-bool Cloud::cloudIsVisible(RenderWindow& window)
-{
-    Vector2f position = sprite.getPosition();
-    Vector2u windowSize = window.getSize();
-
-    return windowSize.x > position.x;
-}

@@ -9,8 +9,11 @@ using namespace std;
 
 class Shark : public Actor
 {
+	private:
+		float speed;
+
 	public:
-		using Actor::Actor;
-		void update(float deltaTime);
+		Shark(Vector2f position, Texture& texture, float speed);
+		void update(RenderWindow& window);
 };
 

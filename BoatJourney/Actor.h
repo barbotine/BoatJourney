@@ -22,6 +22,8 @@ class Actor
 		void setPosition(Vector2f position);
 		void setOriginToCenterSpriteOrigin();
 		void setOriginToBottomCenter();
+		bool isInsideWindowFromRight(RenderWindow& window);
+		bool isInsideWindowFromLeft(RenderWindow& window);
 		virtual ~Actor() = default;
 };
 

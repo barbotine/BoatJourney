@@ -10,6 +10,7 @@
 #include "Character.h"
 #include "Resource.h"
 #include "Shark.h"
+#include "Fish.h"
 
 using namespace std;
 using namespace sf;
@@ -41,7 +42,7 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
@@ -50,7 +51,8 @@ int main()
         !characterTexture.loadFromFile("../assets/texture/sailor.png") ||
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
-        !sharkTexture.loadFromFile("../assets/texture/shark.png")
+        !sharkTexture.loadFromFile("../assets/texture/shark.png") || 
+        !fishTexture.loadFromFile("../assets/texture/fish.png")
         ) {
         throw "Can't load";
     }
@@ -70,7 +72,8 @@ int main()
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2);
     Resource solarEnergy = Resource(Vector2f(1755.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
     Resource lifespan = Resource(Vector2f(1755.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
-    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture);
+    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5);
+    Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2, MovementDirection::RIGHT);
     
     while(window.isOpen())
     {
@@ -95,7 +98,7 @@ int main()
         boat.setOriginToBottomCenter();
         float waveHeight = seaService.calculateWaveHeight(boatX, time);
 
-        boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
+        boat.setPosition(Vector2f(boatX, boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
 
         window.clear();
         window.draw(background, &shader);
@@ -105,7 +108,11 @@ int main()
         character.draw(window);
         solarEnergy.draw(window);
         lifespan.draw(window);
+        shark.update(window);
         shark.draw(window);
+
+        fish.update(window);
+        fish.draw(window);
 
         sun.update(window);
         sun.draw(window);
@@ -116,7 +123,6 @@ int main()
             cloud.update(window);
             cloud.draw(window);
         }
-
       
         window.display();
     }  
