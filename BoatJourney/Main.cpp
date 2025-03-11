@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "Character.h"
 #include "Resource.h"
+#include "Shark.h"
 
 using namespace std;
 using namespace sf;
@@ -40,7 +41,7 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
@@ -48,7 +49,8 @@ int main()
         !boatTexture.loadFromFile("../assets/texture/boat.png") ||
         !characterTexture.loadFromFile("../assets/texture/sailor.png") ||
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
-        !heartTexture.loadFromFile("../assets/texture/heart.png")
+        !heartTexture.loadFromFile("../assets/texture/heart.png") ||
+        !sharkTexture.loadFromFile("../assets/texture/shark.png")
         ) {
         throw "Can't load";
     }
@@ -68,6 +70,7 @@ int main()
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2);
     Resource solarEnergy = Resource(Vector2f(1755.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
     Resource lifespan = Resource(Vector2f(1755.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
+    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture);
     
     while(window.isOpen())
     {
@@ -102,6 +105,7 @@ int main()
         character.draw(window);
         solarEnergy.draw(window);
         lifespan.draw(window);
+        shark.draw(window);
 
         sun.update(window);
         sun.draw(window);

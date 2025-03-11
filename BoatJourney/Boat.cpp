@@ -6,10 +6,6 @@ void Boat::update(float deltaTime)
 {
 }
 
-Vector2f Boat::manageBoatPosition()
-{
-    return Vector2f();
-}
 
 
 
