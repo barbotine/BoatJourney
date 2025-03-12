@@ -16,11 +16,13 @@ class Character : public Actor
 		bool isMaxResourceNotReach(int resource);
 		int getSolarResource();
 		int getLifespan();
+		int getFoodSupply();
+		void gettingFish();
 
 	private:
 		int solarResource;
 		int lifespan;
-		int food;
+		int foodSupply;
 		int water;
 };
 

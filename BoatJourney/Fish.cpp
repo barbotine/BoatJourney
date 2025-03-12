@@ -1,6 +1,6 @@
 #include "Fish.h"
 
-Fish::Fish(Vector2f position, Texture& texture, float speed, MovementDirection direction) : Actor(position, texture), speed(speed), direction(direction)
+Fish::Fish(Vector2f position, Texture& texture, float speed, MovementDirection direction) : Actor(position, texture), speed(speed), direction(direction), wasClicked(false)
 {
 	sprite.setTexture(texture);
 	sprite.setPosition(position);
@@ -18,4 +18,14 @@ void Fish::update(RenderWindow& window)
 	}
 	
 	sprite.setPosition(position);
+}
+
+Sprite& Fish::getSprite() 
+{
+	return sprite;
+}
+
+bool& Fish::getWasClicked()
+{
+	return wasClicked;
 }

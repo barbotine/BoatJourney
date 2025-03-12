@@ -16,9 +16,12 @@ class Fish : public Actor
 private:
 	float speed;
 	MovementDirection direction;
+	bool wasClicked;
 
 public:
 	Fish(Vector2f position, Texture& texture, float speed, MovementDirection direction);
 	void update(RenderWindow& window);
+	Sprite& getSprite();
+	bool& getWasClicked();
 };
 

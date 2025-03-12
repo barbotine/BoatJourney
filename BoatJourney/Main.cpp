@@ -11,6 +11,7 @@
 #include "Resource.h"
 #include "Shark.h"
 #include "Fish.h"
+#include "Utils.h"
 
 using namespace std;
 using namespace sf;
@@ -42,7 +43,7 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture, foodSupplyTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
@@ -52,7 +53,8 @@ int main()
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
         !sharkTexture.loadFromFile("../assets/texture/shark.png") || 
-        !fishTexture.loadFromFile("../assets/texture/fish.png")
+        !fishTexture.loadFromFile("../assets/texture/fish.png") ||
+        !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
         throw "Can't load";
     }
@@ -69,11 +71,12 @@ int main()
     vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
     Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
-    Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2);
-    Resource solarEnergy = Resource(Vector2f(1755.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
-    Resource lifespan = Resource(Vector2f(1755.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
-    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5);
-    Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2, MovementDirection::RIGHT);
+    Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2f);
+    Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
+    Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
+    Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
+    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5f);
+    Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2f, MovementDirection::RIGHT);
     
     while(window.isOpen())
     {
@@ -88,6 +91,13 @@ int main()
             solarEnergy.setText(character.getSolarResource());
         }
 
+        if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+        {
+                character.gettingFish();
+                cout << "cliqué" << endl;
+                foodSupply.setText(character.getFoodSupply());
+        }
+
         time = clock.getElapsedTime().asSeconds();
       
         updateShaderUniforms(shader, time);
@@ -98,7 +108,7 @@ int main()
         boat.setOriginToBottomCenter();
         float waveHeight = seaService.calculateWaveHeight(boatX, time);
 
-        boat.setPosition(Vector2f(boatX, boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
+        boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
 
         window.clear();
         window.draw(background, &shader);
@@ -108,6 +118,8 @@ int main()
         character.draw(window);
         solarEnergy.draw(window);
         lifespan.draw(window);
+        
+        foodSupply.draw(window);
         shark.update(window);
         shark.draw(window);
 

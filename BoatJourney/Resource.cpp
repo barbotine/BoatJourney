@@ -30,3 +30,4 @@ void Resource::draw(sf::RenderWindow& window)
     window.draw(resourceValue);
     window.draw(sprite);
 }
+
