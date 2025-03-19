@@ -26,11 +26,6 @@ void Actor::draw(RenderWindow& window)
     window.draw(sprite);
 }
 
-Vector2f Actor::getPosition()
-{
-    return Vector2f();
-}
-
 void Actor::setPosition(Vector2f position)
 {
     sprite.setPosition(position);
@@ -61,3 +56,7 @@ bool Actor::isInsideWindowFromLeft(RenderWindow& window)
     return position.x < windowSize.x;
 }
 
+Vector2f Actor::getPosition()
+{
+    return position;
+}

@@ -13,7 +13,8 @@ Sun::Sun(Vector2f position, Texture& texture, float speed) : Actor(position, tex
     this->isVisible = true;
 }
 
-float Sun::generateRandomTime() {
+float Sun::generateRandomTime()
+{
     return 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (5.0f - 1.0f)));
 }
 

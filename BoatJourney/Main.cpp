@@ -12,6 +12,7 @@
 #include "Shark.h"
 #include "Fish.h"
 #include "Utils.h"
+#include "FishManager.h"
 
 using namespace std;
 using namespace sf;
@@ -59,6 +60,14 @@ int main()
         throw "Can't load";
     }
     
+    Texture fishTexture2, fishTexture3, fishTexture4;
+    if (!fishTexture2.loadFromFile("../assets/texture/nemo.jpg") || 
+    !fishTexture3.loadFromFile("../assets/texture/dory.jpg") || 
+    !fishTexture4.loadFromFile("../assets/texture/horse-lion.jpg")
+    )
+    {
+        throw "Can't load";
+
     sf::Shader shader;
     if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
         throw "Can't load shader texture";
@@ -69,6 +78,12 @@ int main()
     Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
     CloudManager cloudService = CloudManager();
     vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
+
+
+    FishManager fish = FishManager();
+    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
+
+
     Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
     Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
     Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2f);
