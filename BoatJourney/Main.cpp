@@ -76,7 +76,7 @@ int main()
         }
 
         Clock clock;
-        float time;
+        float currentTime;
 
         Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
         CloudManager cloudService = CloudManager();
@@ -98,7 +98,7 @@ int main()
 
         while (window.isOpen())
         {
-            time = clock.getElapsedTime().asSeconds();
+            currentTime = clock.getElapsedTime().asSeconds();
 
             while (const std::optional event = window.pollEvent())
             {
@@ -111,20 +111,25 @@ int main()
                 solarEnergy.setText(character.getSolarResource());
             }
 
-            if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+            for (Fish& fish : fishes)
             {
-                character.gettingFish();
-                foodSupply.setText(character.getFoodSupply());
-                fish.makeFishDisappear(time);
+                if(Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+                {
+                    character.gettingFish();
+                    foodSupply.setText(character.getFoodSupply());
+                    fish.makeFishDisappear(currentTime);
+                }
             }
 
-            updateShaderUniforms(shader, time);
+            
+
+            updateShaderUniforms(shader, currentTime);
 
             Vector2f resolution(window.getSize().x, window.getSize().y);
 
             float boatX = boat.getPosition().x / resolution.x;
             boat.setOriginToBottomCenter();
-            float waveHeight = seaService.calculateWaveHeight(boatX, time);
+            float waveHeight = seaService.calculateWaveHeight(boatX, currentTime);
 
             boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
 
@@ -140,9 +145,6 @@ int main()
             foodSupply.draw(window);
             shark.update(window);
             shark.draw(window);
-           
-            fish.update(window, time);
-            fish.draw(window);
             
             sun.update(window);
             sun.draw(window);
@@ -153,11 +155,11 @@ int main()
                 cloud.draw(window);
             }
 
-            /*for (Fish& fish : fishes)
+            for (Fish& fish : fishes)
             {
-                fish.update(window);
+                fish.update(window, currentTime);
                 fish.draw(window);
-            }*/
+            }
             window.display();
         }
         return 0;
