@@ -44,7 +44,7 @@ int main()
 
     SeaManager seaService = SeaManager();
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture, foodSupplyTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture1, foodSupplyTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png") ||
@@ -54,17 +54,18 @@ int main()
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
         !sharkTexture.loadFromFile("../assets/texture/shark.png") ||
-        !fishTexture.loadFromFile("../assets/texture/fish.png") ||
+        !fishTexture1.loadFromFile("../assets/texture/fish.png") ||
         !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
         throw "Can't load";
     }
 
-    Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5;
+    Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6;
     if (!fishTexture2.loadFromFile("../assets/texture/nemo.png") ||
         !fishTexture3.loadFromFile("../assets/texture/dory.png") ||
         !fishTexture4.loadFromFile("../assets/texture/horse-lion.png") ||
-        !fishTexture5.loadFromFile("../assets/texture/fish2.png")
+        !fishTexture5.loadFromFile("../assets/texture/fish2.png") ||
+        !fishTexture6.loadFromFile("../assets/texture/fish4.png") 
         )
     {
         throw "Can't load";
@@ -78,13 +79,13 @@ int main()
         Clock clock;
         float currentTime;
 
-        Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
+        Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
         CloudManager cloudService = CloudManager();
         vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
 
 
         FishManager fishService = FishManager();
-        vector<Fish> fishes = fishService.createFishes(fishTexture, fishTexture3, fishTexture4, fishTexture5);
+        vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
 
 
         Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
@@ -94,7 +95,7 @@ int main()
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
         Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5f);
-        Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2f, MovementDirection::RIGHT);
+        
 
         while (window.isOpen())
         {
@@ -138,11 +139,7 @@ int main()
             solarActivityButton.draw(window);
 
             boat.draw(window);
-            character.draw(window);
-            solarEnergy.draw(window);
-            lifespan.draw(window);
-
-            foodSupply.draw(window);
+            
             shark.update(window);
             shark.draw(window);
             
@@ -160,6 +157,12 @@ int main()
                 fish.update(window, currentTime);
                 fish.draw(window);
             }
+
+            character.draw(window);
+            solarEnergy.draw(window);
+            lifespan.draw(window);
+            foodSupply.draw(window);
+
             window.display();
         }
         return 0;

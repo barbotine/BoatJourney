@@ -41,7 +41,10 @@ int Character::getFoodSupply()
 
 void Character::gettingFish()
 {
-    foodSupply++;
+    if (isMaxResourceNotReach(foodSupply))
+    {
+        foodSupply++;
+    }
 }
 
     
