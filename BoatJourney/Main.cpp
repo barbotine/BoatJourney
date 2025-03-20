@@ -47,111 +47,118 @@ int main()
     Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture, foodSupplyTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
-        !cloudText2.loadFromFile("../assets/texture/cloud2.png")|| 
+        !cloudText2.loadFromFile("../assets/texture/cloud2.png") ||
         !sunText.loadFromFile("../assets/texture/sun.png") ||
         !boatTexture.loadFromFile("../assets/texture/boat.png") ||
         !characterTexture.loadFromFile("../assets/texture/sailor.png") ||
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
-        !sharkTexture.loadFromFile("../assets/texture/shark.png") || 
+        !sharkTexture.loadFromFile("../assets/texture/shark.png") ||
         !fishTexture.loadFromFile("../assets/texture/fish.png") ||
         !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
         throw "Can't load";
     }
-    
-    Texture fishTexture2, fishTexture3, fishTexture4;
-    if (!fishTexture2.loadFromFile("../assets/texture/nemo.jpg") || 
-    !fishTexture3.loadFromFile("../assets/texture/dory.jpg") || 
-    !fishTexture4.loadFromFile("../assets/texture/horse-lion.jpg")
-    )
+
+    Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5;
+    if (!fishTexture2.loadFromFile("../assets/texture/nemo.png") ||
+        !fishTexture3.loadFromFile("../assets/texture/dory.png") ||
+        !fishTexture4.loadFromFile("../assets/texture/horse-lion.png") ||
+        !fishTexture5.loadFromFile("../assets/texture/fish2.png")
+        )
     {
         throw "Can't load";
-
-    sf::Shader shader;
-    if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
-        throw "Can't load shader texture";
     }
-    Clock clock;
-    float time = clock.getElapsedTime().asSeconds();
 
-    Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
-    CloudManager cloudService = CloudManager();
-    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
-
-
-    FishManager fish = FishManager();
-    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
-
-
-    Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
-    Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
-    Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2f);
-    Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
-    Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
-    Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-    Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5f);
-    Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2f, MovementDirection::RIGHT);
-    
-    while(window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                window.close();
+        sf::Shader shader;
+        if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
+            throw "Can't load shader texture";
         }
 
-        if (solarActivityButton.isClicked(window)) {
-            character.makingSolarEnergy(sun, window);
-            solarEnergy.setText(character.getSolarResource());
-        }
+        Clock clock;
+        float time;
 
-        if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+        Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar Panel");
+        CloudManager cloudService = CloudManager();
+        vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
+
+
+        FishManager fishService = FishManager();
+        vector<Fish> fishes = fishService.createFishes(fishTexture, fishTexture3, fishTexture4, fishTexture5);
+
+
+        Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
+        Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
+        Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2f);
+        Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
+        Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
+        Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
+        Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5f);
+        Fish fish = Fish(Vector2f(1700, 700.f), fishTexture, 0.2f, MovementDirection::RIGHT);
+
+        while (window.isOpen())
         {
+            time = clock.getElapsedTime().asSeconds();
+
+            while (const std::optional event = window.pollEvent())
+            {
+                if (event->is<sf::Event::Closed>())
+                    window.close();
+            }
+
+            if (solarActivityButton.isClicked(window)) {
+                character.makingSolarEnergy(sun, window);
+                solarEnergy.setText(character.getSolarResource());
+            }
+
+            if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+            {
                 character.gettingFish();
-                cout << "cliqué" << endl;
                 foodSupply.setText(character.getFoodSupply());
+                fish.makeFishDisappear(time);
+            }
+
+            updateShaderUniforms(shader, time);
+
+            Vector2f resolution(window.getSize().x, window.getSize().y);
+
+            float boatX = boat.getPosition().x / resolution.x;
+            boat.setOriginToBottomCenter();
+            float waveHeight = seaService.calculateWaveHeight(boatX, time);
+
+            boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
+
+            window.clear();
+            window.draw(background, &shader);
+            solarActivityButton.draw(window);
+
+            boat.draw(window);
+            character.draw(window);
+            solarEnergy.draw(window);
+            lifespan.draw(window);
+
+            foodSupply.draw(window);
+            shark.update(window);
+            shark.draw(window);
+           
+            fish.update(window, time);
+            fish.draw(window);
+            
+            sun.update(window);
+            sun.draw(window);
+
+            for (Cloud& cloud : clouds)
+            {
+                cloud.update(window);
+                cloud.draw(window);
+            }
+
+            /*for (Fish& fish : fishes)
+            {
+                fish.update(window);
+                fish.draw(window);
+            }*/
+            window.display();
         }
-
-        time = clock.getElapsedTime().asSeconds();
-      
-        updateShaderUniforms(shader, time);
-
-        Vector2f resolution(window.getSize().x, window.getSize().y);
-     
-        float boatX = boat.getPosition().x / resolution.x;
-        boat.setOriginToBottomCenter();
-        float waveHeight = seaService.calculateWaveHeight(boatX, time);
-
-        boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
-
-        window.clear();
-        window.draw(background, &shader);
-        solarActivityButton.draw(window);
-
-        boat.draw(window);
-        character.draw(window);
-        solarEnergy.draw(window);
-        lifespan.draw(window);
-        
-        foodSupply.draw(window);
-        shark.update(window);
-        shark.draw(window);
-
-        fish.update(window);
-        fish.draw(window);
-
-        sun.update(window);
-        sun.draw(window);
-
-
-        for (Cloud& cloud : clouds)
-        {
-            cloud.update(window);
-            cloud.draw(window);
-        }
-      
-        window.display();
-    }  
-    return 0; 
-}
+        return 0;
+    }
