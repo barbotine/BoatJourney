@@ -77,29 +77,32 @@ int main()
         }
 
         Clock clock;
-        float currentTime;
+        float currentTime = 0.0f;
+        float previousTime = 0.0f;
+        float deltaTime = 0.0f;
 
         Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
         CloudManager cloudService = CloudManager();
         vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
 
-
         FishManager fishService = FishManager();
         vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
 
-
         Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
         Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
-        Sun sun = Sun(Vector2f(100, 500.f), sunText, 0.2f);
+        Sun sun = Sun(Vector2f(100, 500.f), sunText, 250.f);
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1700, 500.f), sharkTexture, 0.5f);
-        
+        Shark shark = Shark(Vector2f(1700, 450.f), sharkTexture, 300.f);
 
+        bool collisionDetected = false;
+        
         while (window.isOpen())
         {
+            previousTime = currentTime;
             currentTime = clock.getElapsedTime().asSeconds();
+            deltaTime = currentTime - previousTime;
 
             while (const std::optional event = window.pollEvent())
             {
@@ -112,6 +115,20 @@ int main()
                 solarEnergy.setText(character.getSolarResource());
             }
 
+
+            if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
+            {
+                if (!collisionDetected)
+                {
+                    character.losingLifeSpan();
+                    lifespan.setText(character.getLifespan());
+                    collisionDetected = true;
+                }
+            }
+            else {
+                collisionDetected = false;
+            }
+
             for (Fish& fish : fishes)
             {
                 if(Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
@@ -121,8 +138,6 @@ int main()
                     fish.makeFishDisappear(currentTime);
                 }
             }
-
-            
 
             updateShaderUniforms(shader, currentTime);
 
@@ -140,10 +155,10 @@ int main()
 
             boat.draw(window);
             
-            shark.update(window);
+            shark.update(window, deltaTime);
             shark.draw(window);
             
-            sun.update(window);
+            sun.update(window, deltaTime);
             sun.draw(window);
 
             for (Cloud& cloud : clouds)
@@ -154,7 +169,7 @@ int main()
 
             for (Fish& fish : fishes)
             {
-                fish.update(window, currentTime);
+                fish.update(window, currentTime, deltaTime);
                 fish.draw(window);
             }
 

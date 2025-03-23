@@ -23,12 +23,11 @@ private:
 
 public:
 	Fish(Vector2f position, Texture& texture, float speed, MovementDirection direction);
-	void update(RenderWindow& window, float deltaTime);
+	void update(RenderWindow& window, float currentTime, float deltaTime);
 	Sprite& getSprite();
 	bool& getWasClicked();
 	void makeFishDisappear(float currentTime);
 	void makeFishAppear();
-	void draw(RenderWindow& window);
 	bool GetIsActive();
 };
 

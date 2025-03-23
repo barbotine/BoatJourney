@@ -56,6 +56,11 @@ bool Actor::isInsideWindowFromLeft(RenderWindow& window)
     return position.x < windowSize.x;
 }
 
+Sprite& Actor::getSprite()
+{
+    return sprite;
+}
+
 Vector2f Actor::getPosition()
 {
     return position;

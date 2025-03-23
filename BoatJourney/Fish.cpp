@@ -6,13 +6,10 @@ Fish::Fish(Vector2f position, Texture& texture, float speed, MovementDirection d
 	sprite.setPosition(position);
 }
 
-void Fish::update(RenderWindow& window, float currentTime)
+void Fish::update(RenderWindow& window, float currentTime, float deltaTime)
 {
 	if (!isActive)
 	{
-
-		cout << respawnTimer << endl;
-
 		if (currentTime - respawnTimer >= spriteRespawnTime)
 		{
 			makeFishAppear();
@@ -20,16 +17,14 @@ void Fish::update(RenderWindow& window, float currentTime)
 	}
 	if (direction == MovementDirection::LEFT)
 	{
-		position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
+		position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed * deltaTime  : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
 	}
 	else
 	{
-		position = isInsideWindowFromRight(window) ? position - Vector2f(1, 0) * speed : Vector2f(window.getSize().x + sprite.getGlobalBounds().size.x, position.y);
+		position = isInsideWindowFromRight(window) ? position - Vector2f(1, 0) * speed * deltaTime : Vector2f(window.getSize().x + sprite.getGlobalBounds().size.x, position.y);
 	}
 
 	sprite.setPosition(position);
-
-	
 }
 
 Sprite& Fish::getSprite() 
@@ -46,7 +41,8 @@ void Fish::makeFishDisappear(float currentTime)
 {
 	this->isActive = false;
 	respawnTimer = currentTime;
-	spriteRespawnTime = static_cast<float>(5 + rand() % 10);
+	//spriteRespawnTime = static_cast<float>(5 + rand() % 10);
+	spriteRespawnTime = 5;
 	sprite.setColor(sf::Color::Transparent);
 }
 
@@ -54,11 +50,6 @@ void Fish::makeFishAppear()
 {
 	this->isActive = true;
 	sprite.setColor(sf::Color::White);
-}
-
-void Fish::draw(RenderWindow& window)
-{
-	window.draw(sprite);	
 }
 
 bool Fish::GetIsActive()

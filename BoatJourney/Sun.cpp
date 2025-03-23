@@ -18,7 +18,7 @@ float Sun::generateRandomTime()
     return 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (5.0f - 1.0f)));
 }
 
-void Sun::update(RenderWindow& window)
+void Sun::update(RenderWindow& window, float deltaTime)
 {
     float invisibleDuration;
     srand(static_cast<unsigned>(time(0)));
@@ -31,7 +31,7 @@ void Sun::update(RenderWindow& window)
     }
     else
     {
-        position += Vector2f(1, 0) * speed;
+        position += Vector2f(1, 0) * speed * deltaTime;
         makeSunVisible(window, invisibleDuration);
     }
 

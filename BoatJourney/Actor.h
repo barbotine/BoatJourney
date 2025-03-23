@@ -24,6 +24,7 @@ class Actor
 		void setOriginToBottomCenter();
 		bool isInsideWindowFromRight(RenderWindow& window);
 		bool isInsideWindowFromLeft(RenderWindow& window);
+		Sprite& getSprite();
 		virtual ~Actor() = default;
 };
 

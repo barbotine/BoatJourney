@@ -7,8 +7,8 @@ Shark::Shark(Vector2f position, Texture& texture, float speed) : Actor(position,
 	sprite.setPosition(position);
 }
 
-void Shark::update(RenderWindow& window)
+void Shark::update(RenderWindow& window, float deltaTime)
 {
-	position = isInsideWindowFromRight(window) ? position - Vector2f(1, 0) * speed : Vector2f(window.getSize().x + sprite.getGlobalBounds().size.x, position.y);
+	position = isInsideWindowFromRight(window) ? position - Vector2f(1, 0) * speed * deltaTime : Vector2f(window.getSize().x + sprite.getGlobalBounds().size.x, position.y);
 	sprite.setPosition(position);
 }

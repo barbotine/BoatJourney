@@ -14,6 +14,6 @@ class Shark : public Actor
 
 	public:
 		Shark(Vector2f position, Texture& texture, float speed);
-		void update(RenderWindow& window);
+		void update(RenderWindow& window, float deltaTime);
 };
 

@@ -24,7 +24,7 @@ public:
 	using Actor::Actor;
 	Sun(Vector2f position, string actorTex, Texture& texture, float speed);
 	Sun(Vector2f position, Texture& texture, float speed);
-	void update(RenderWindow& window);
+	void update(RenderWindow& window, float deltaTime);
 	void makeSunInvisible(RenderWindow& window);
 	void makeSunVisible(RenderWindow& window, float sunAppearingTime);
 	float generateRandomTime();

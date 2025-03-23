@@ -47,4 +47,13 @@ void Character::gettingFish()
     }
 }
 
+void Character::losingLifeSpan()
+{
+    lifespan--;
+    if (lifespan == 0)
+    {
+        cout << "You lose" << endl;
+    }
+}
+
     
