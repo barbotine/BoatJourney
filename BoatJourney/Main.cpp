@@ -94,9 +94,14 @@ int main()
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1700, 450.f), sharkTexture, 300.f);
+        Shark shark = Shark(Vector2f(1900, 450.f), sharkTexture, 300.f);
 
-        bool collisionDetected = false;
+        bool SharkBoatCollisionDetected = false;
+
+        int sharkClicks = 0;
+        const int sharkMaxClicks = 5;
+        bool isSharkAlive = true;
+        bool wasSharkPressed = false;
         
         while (window.isOpen())
         {
@@ -118,15 +123,17 @@ int main()
 
             if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
             {
-                if (!collisionDetected)
+                if (!SharkBoatCollisionDetected)
                 {
                     character.losingLifeSpan();
                     lifespan.setText(character.getLifespan());
-                    collisionDetected = true;
+                    SharkBoatCollisionDetected = true;
+                    boat.getSprite().setColor(Color::Red);
                 }
             }
             else {
-                collisionDetected = false;
+                SharkBoatCollisionDetected = false;
+                boat.getSprite().setColor(sf::Color::White);
             }
 
             for (Fish& fish : fishes)
@@ -138,6 +145,18 @@ int main()
                     fish.makeFishDisappear(currentTime);
                 }
             }
+
+            if (isSharkAlive && Utils::isClicked(shark.getSprite(), window, wasSharkPressed)) {
+                sharkClicks++;
+                if (sharkClicks >= sharkMaxClicks) {
+                    shark.makeSharkDisappear(currentTime);
+                    cout << "Activité du shark dans le if : " << shark.getIsActive() << endl;
+                    sharkClicks = 0;
+                }
+            }
+
+            cout << "Activité du shark en dehors du if : " << shark.getIsActive() << endl;
+            shark.makeSharkAppear(currentTime);
 
             updateShaderUniforms(shader, currentTime);
 
@@ -151,19 +170,20 @@ int main()
 
             window.clear();
             window.draw(background, &shader);
-            solarActivityButton.draw(window);
-
+            
             boat.draw(window);
             
-            shark.update(window, deltaTime);
-            shark.draw(window);
+            if (shark.getIsActive()) {
+                shark.update(window, deltaTime);
+                shark.draw(window);
+            }
             
             sun.update(window, deltaTime);
             sun.draw(window);
 
             for (Cloud& cloud : clouds)
             {
-                cloud.update(window);
+                cloud.update(window, deltaTime);
                 cloud.draw(window);
             }
 
@@ -177,7 +197,7 @@ int main()
             solarEnergy.draw(window);
             lifespan.draw(window);
             foodSupply.draw(window);
-
+            solarActivityButton.draw(window);
             window.display();
         }
         return 0;

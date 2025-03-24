@@ -41,8 +41,7 @@ void Fish::makeFishDisappear(float currentTime)
 {
 	this->isActive = false;
 	respawnTimer = currentTime;
-	//spriteRespawnTime = static_cast<float>(5 + rand() % 10);
-	spriteRespawnTime = 5;
+	spriteRespawnTime = static_cast<float>(5 + rand() % 10);
 	sprite.setColor(sf::Color::Transparent);
 }
 

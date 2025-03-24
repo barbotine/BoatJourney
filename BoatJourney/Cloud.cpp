@@ -14,9 +14,9 @@ Cloud::Cloud(Vector2f position, Texture& texture, float speed) : Actor(position,
     sprite.setPosition(position);
 }
 
-void Cloud::update(RenderWindow& window)
+void Cloud::update(RenderWindow& window, float deltaTime)
 {
-    position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
+    position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed * deltaTime : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
     sprite.setPosition(position);
 }
 

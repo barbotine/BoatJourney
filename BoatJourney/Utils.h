@@ -8,7 +8,6 @@ using namespace std;
 
 class Utils
 {
-private :
 
 public :
     bool static isMouseOver(RenderWindow& window, const Sprite& sprite) {
@@ -29,6 +28,7 @@ public :
         return false;
     }
 };
+
 
 
 
