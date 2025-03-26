@@ -94,7 +94,7 @@ int main()
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1900, 450.f), sharkTexture, 300.f);
+        Shark shark = Shark(Vector2f(1900.f, 700.f), sharkTexture, 300.f);
 
         bool SharkBoatCollisionDetected = false;
 
@@ -119,7 +119,6 @@ int main()
                 character.makingSolarEnergy(sun, window);
                 solarEnergy.setText(character.getSolarResource());
             }
-
 
             if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
             {
@@ -150,12 +149,9 @@ int main()
                 sharkClicks++;
                 if (sharkClicks >= sharkMaxClicks) {
                     shark.makeSharkDisappear(currentTime);
-                    cout << "Activité du shark dans le if : " << shark.getIsActive() << endl;
                     sharkClicks = 0;
                 }
             }
-
-            cout << "Activité du shark en dehors du if : " << shark.getIsActive() << endl;
             shark.makeSharkAppear(currentTime);
 
             updateShaderUniforms(shader, currentTime);
@@ -174,7 +170,7 @@ int main()
             boat.draw(window);
             
             if (shark.getIsActive()) {
-                shark.update(window, deltaTime);
+                shark.update(window, deltaTime, boat);
                 shark.draw(window);
             }
             

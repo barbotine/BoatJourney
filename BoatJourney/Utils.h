@@ -27,6 +27,12 @@ public :
         }
         return false;
     }
+
+    Vector2f static normalize(Vector2f vector)
+    {
+        float norme = sqrt(vector.x * vector.x + vector.y * vector.y);
+        return Vector2f((vector.x / norme), (vector.y / norme));
+    }
 };
 
 
