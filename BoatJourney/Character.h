@@ -20,6 +20,8 @@ class Character : public Actor
 		void gettingFish();
 		void losingLifeSpan();
 
+		void Eat();
+
 	private:
 		int solarResource;
 		int lifespan;

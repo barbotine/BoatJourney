@@ -59,4 +59,10 @@ void Character::losingLifeSpan()
     }
 }
 
+void Character::Eat()
+{
+    if (foodSupply <= 0) foodSupply = 0;
+    else foodSupply--;
+}
+
     

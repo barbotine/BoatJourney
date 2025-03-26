@@ -27,13 +27,13 @@ void Shark::makeSharkAppear(float currentTime)
 
 void Shark::update(RenderWindow& window, float deltaTime, Actor actor)
 {
-	if (!isRushing)
+	/*if (!isRushing)
 	{
 		if (std::rand() % 5 == 0)
 		{
 			isRushing = true;
 		}
-	}
+	}*/
 
 	if (isRushing)
 	{
@@ -65,5 +65,4 @@ void Shark::collidesWith(Actor actor)
 		isRushing = false;
 		sprite.setPosition(Vector2f(1900.f, 700.f));
 	}
-	//set random y pos
 }

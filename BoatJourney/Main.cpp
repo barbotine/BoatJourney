@@ -13,6 +13,8 @@
 #include "Fish.h"
 #include "Utils.h"
 #include "FishManager.h"
+#include "ProgressBar.h"
+#include "HungerBar.h"
 
 using namespace std;
 using namespace sf;
@@ -82,6 +84,7 @@ int main()
         float deltaTime = 0.0f;
 
         Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
+        Button eatingActivityButton = Button(700, 900, 150, 50, Color::Blue, "Eating");
         CloudManager cloudService = CloudManager();
         vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
 
@@ -96,8 +99,9 @@ int main()
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
         Shark shark = Shark(Vector2f(1900.f, 700.f), sharkTexture, 300.f);
 
-        bool SharkBoatCollisionDetected = false;
+        HungerBar hungerBar(50, 50);
 
+        bool SharkBoatCollisionDetected = false;
         int sharkClicks = 0;
         const int sharkMaxClicks = 5;
         bool isSharkAlive = true;
@@ -115,9 +119,20 @@ int main()
                     window.close();
             }
 
-            if (solarActivityButton.isClicked(window)) {
+            if (solarActivityButton.isClicked(window)) 
+            {
                 character.makingSolarEnergy(sun, window);
                 solarEnergy.setText(character.getSolarResource());
+            }
+
+            if (eatingActivityButton.isClicked(window)) 
+            {
+                character.Eat();
+                foodSupply.setText(character.getFoodSupply());
+                if (character.getFoodSupply() > 0)
+                {
+                    hungerBar.FillTheBar();
+                }
             }
 
             if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
@@ -152,6 +167,8 @@ int main()
                     sharkClicks = 0;
                 }
             }
+            hungerBar.EmptyTheBar(deltaTime);
+
             shark.makeSharkAppear(currentTime);
 
             updateShaderUniforms(shader, currentTime);
@@ -188,12 +205,14 @@ int main()
                 fish.update(window, currentTime, deltaTime);
                 fish.draw(window);
             }
-
+            hungerBar.update(hungerBar.GetCurrentHunger(), hungerBar.GetMaxHunger());
+            hungerBar.draw(window);
             character.draw(window);
             solarEnergy.draw(window);
             lifespan.draw(window);
             foodSupply.draw(window);
             solarActivityButton.draw(window);
+            eatingActivityButton.draw(window);
             window.display();
         }
         return 0;
