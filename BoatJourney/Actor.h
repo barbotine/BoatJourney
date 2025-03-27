@@ -9,7 +9,6 @@ class Actor
 {
 
 	protected:
-		Vector2f position;
 		Sprite sprite;
 		Texture texture;
 

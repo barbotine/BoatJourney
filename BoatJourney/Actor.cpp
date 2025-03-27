@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include <SFML/Graphics.hpp>
 
-Actor::Actor(Vector2f position, string &actorTex) : sprite(texture), position(position), texture()
+Actor::Actor(Vector2f position, string &actorTex) : sprite(texture), texture()
 {
     if (!texture.loadFromFile(actorTex))
     {
@@ -11,7 +11,7 @@ Actor::Actor(Vector2f position, string &actorTex) : sprite(texture), position(po
     sprite.setPosition(position);
 }
 
-Actor::Actor(Vector2f position, Texture& actorTex) : sprite(actorTex), position(position), texture(actorTex)
+Actor::Actor(Vector2f position, Texture& actorTex) : sprite(actorTex), texture(actorTex)
 {
     sprite.setTexture(texture);
     sprite.setPosition(position);
@@ -39,7 +39,7 @@ void Actor::setOriginToCenterSpriteOrigin()
 void Actor::setOriginToBottomCenter()
 {
     sf::FloatRect bounds = sprite.getLocalBounds();
-    sf::Vector2f newOrigin(bounds.size.x / 2.f, bounds.size.y * 0.85);
+    sf::Vector2f newOrigin(bounds.size.x / 2.f, bounds.size.y);
     sprite.setOrigin(newOrigin); 
 }
 
@@ -63,5 +63,5 @@ Sprite& Actor::getSprite()
 
 Vector2f Actor::getPosition()
 {
-    return position;
+    return sprite.getPosition();
 }

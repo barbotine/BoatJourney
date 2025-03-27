@@ -16,15 +16,16 @@ class Shark : public Actor
 		float spriteRespawnTime;
 		float respawnTimer;
 		bool isRushing;
+		float elaspsedTime;
 
 	public:
 		Shark(Vector2f position, Texture& texture, float speed);
 		void makeSharkDisappear(float currentTime);
 
 		void makeSharkAppear(float currentTime);
-		void update(RenderWindow& window, float deltaTime, Actor actor);
+		void update(RenderWindow& window, float deltaTime, Actor& actor);
 		bool getIsActive();
-		void rushingOnActor(Actor actor, float deltaTime);
-		void collidesWith(Actor actor);
+		void rushingOnActor(Actor& actor, float deltaTime);
+		void collidesWith(Actor& actor);
 };
 

@@ -14,9 +14,12 @@ Cloud::Cloud(Vector2f position, Texture& texture, float speed) : Actor(position,
     sprite.setPosition(position);
 }
 
+// changer en move 
+// comprendre ce que j'ai fait
 void Cloud::update(RenderWindow& window, float deltaTime)
 {
-    position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed * deltaTime : Vector2f(-sprite.getGlobalBounds().size.x, position.y);
+    Vector2f position = sprite.getPosition();
+    position = isInsideWindowFromLeft(window) ? position + Vector2f(1, 0) * speed * deltaTime : Vector2f(sprite.getGlobalBounds().size.x, position.y);
     sprite.setPosition(position);
 }
 

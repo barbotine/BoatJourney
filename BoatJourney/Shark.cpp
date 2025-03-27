@@ -1,7 +1,6 @@
 #include "Shark.h"
 
-
-Shark::Shark(Vector2f position, Texture& texture, float speed) : Actor(position, texture), speed(speed), isActive(true), spriteRespawnTime(0.0f), respawnTimer(0.0f), isRushing(false)
+Shark::Shark(Vector2f position, Texture& texture, float speed) : Actor(position, texture), speed(speed), isActive(true), spriteRespawnTime(0.0f), respawnTimer(0.0f), isRushing(false), elaspsedTime(0.f)
 {
 	sprite.setTexture(texture);
 	sprite.setPosition(position);
@@ -25,15 +24,18 @@ void Shark::makeSharkAppear(float currentTime)
 	}
 }
 
-void Shark::update(RenderWindow& window, float deltaTime, Actor actor)
+void Shark::update(RenderWindow& window, float deltaTime, Actor& actor)
 {
-	/*if (!isRushing)
+	Vector2f position = sprite.getPosition();
+	elaspsedTime += deltaTime;
+	if (!isRushing)
 	{
-		if (std::rand() % 5 == 0)
+		if (elaspsedTime > 6)
 		{
 			isRushing = true;
+			elaspsedTime = 0;
 		}
-	}*/
+	}
 
 	if (isRushing)
 	{
@@ -52,17 +54,17 @@ bool Shark::getIsActive()
 	return isActive;
 }
 
-void Shark::rushingOnActor(Actor actor, float deltaTime)
+void Shark::rushingOnActor(Actor& actor, float deltaTime)
 {
 	Vector2f direction = Utils::normalize(actor.getPosition() - sprite.getPosition());
+
 	sprite.move(direction * 400.f * deltaTime);
 }
 
-void Shark::collidesWith(Actor actor)
+void Shark::collidesWith(Actor& actor)
 {
 	if (sprite.getGlobalBounds().findIntersection(actor.getSprite().getGlobalBounds()))
 	{
 		isRushing = false;
-		sprite.setPosition(Vector2f(1900.f, 700.f));
 	}
 }

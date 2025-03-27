@@ -78,6 +78,8 @@ int main()
             throw "Can't load shader texture";
         }
 
+        Vector2f resolution(window.getSize().x, window.getSize().y);
+
         Clock clock;
         float currentTime = 0.0f;
         float previousTime = 0.0f;
@@ -92,7 +94,8 @@ int main()
         vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
 
         Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
-        Boat boat = Boat(Vector2f(0.f, 0.f), boatTexture);
+        Boat boat = Boat(Vector2f(resolution.x / 2.f, 0.f), boatTexture);
+        boat.setOriginToBottomCenter();
         Sun sun = Sun(Vector2f(100, 500.f), sunText, 250.f);
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
@@ -173,14 +176,11 @@ int main()
 
             updateShaderUniforms(shader, currentTime);
 
-            Vector2f resolution(window.getSize().x, window.getSize().y);
-
             float boatX = boat.getPosition().x / resolution.x;
-            boat.setOriginToBottomCenter();
-            float waveHeight = seaService.calculateWaveHeight(boatX, currentTime);
 
-            boat.setPosition(Vector2f(boatX + (resolution.x / 2.f), boat.getPosition().y + (resolution.y / 2.f) + waveHeight * resolution.y));
-
+            float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime);
+            
+            boat.setPosition(Vector2f(boat.getSprite().getPosition().x, (waveHeight + 0.5f) * resolution.y));
             window.clear();
             window.draw(background, &shader);
             

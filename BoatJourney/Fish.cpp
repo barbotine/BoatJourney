@@ -8,6 +8,7 @@ Fish::Fish(Vector2f position, Texture& texture, float speed, MovementDirection d
 
 void Fish::update(RenderWindow& window, float currentTime, float deltaTime)
 {
+	Vector2f position = sprite.getPosition();
 	if (!isActive)
 	{
 		if (currentTime - respawnTimer >= spriteRespawnTime)
