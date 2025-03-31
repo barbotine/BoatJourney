@@ -34,15 +34,15 @@ void updateShaderUniforms(sf::Shader& shader, float time) {
 
 int main()
 {
-    VideoMode desktopMode = sf::VideoMode::getDesktopMode();
-    unsigned int screenWidth = desktopMode.size.x;
-    unsigned int screenHeight = desktopMode.size.y;
+    VideoMode desktopMode = VideoMode::getDesktopMode();
+ 
+    RenderWindow window(desktopMode, "Boat Journey", sf::Style::Default);
+   
+    window.setVerticalSyncEnabled(true);
+    Vector2u windowSize = window.getSize();
+    Vector2f resolution(static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
-    RenderWindow window(desktopMode, "Plein écran");
-
-    RectangleShape background(sf::Vector2f(window.getSize()));
-    Vector2f backgroundPosition(0.f, 0.f);
-    background.setPosition(backgroundPosition);
+    RectangleShape background(resolution);
 
     SeaManager seaService = SeaManager();
 
@@ -78,7 +78,6 @@ int main()
             throw "Can't load shader texture";
         }
 
-        Vector2f resolution(window.getSize().x, window.getSize().y);
 
         Clock clock;
         float currentTime = 0.0f;
@@ -94,8 +93,11 @@ int main()
         vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
 
         Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
-        Boat boat = Boat(Vector2f(resolution.x / 2.f, 0.f), boatTexture);
+
+        Vector2f boatInitialPos(resolution.x / 2.f, resolution.y * 0.5f);
+        Boat boat = Boat(boatInitialPos, boatTexture);
         boat.setOriginToBottomCenter();
+
         Sun sun = Sun(Vector2f(100, 500.f), sunText, 250.f);
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
