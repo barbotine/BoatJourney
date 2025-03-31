@@ -21,7 +21,6 @@ class Shark : public Actor
 	public:
 		Shark(Vector2f position, Texture& texture, float speed);
 		void makeSharkDisappear(float currentTime);
-
 		void makeSharkAppear(float currentTime);
 		void update(RenderWindow& window, float deltaTime, Actor& actor);
 		bool getIsActive();

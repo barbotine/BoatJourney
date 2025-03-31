@@ -7,7 +7,6 @@ using namespace sf;
 
 class Actor
 {
-
 	protected:
 		Sprite sprite;
 		Texture texture;

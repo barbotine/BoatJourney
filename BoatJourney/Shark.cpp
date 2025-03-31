@@ -28,7 +28,7 @@ void Shark::update(RenderWindow& window, float deltaTime, Actor& actor)
 {
 	Vector2f position = sprite.getPosition();
 	elaspsedTime += deltaTime;
-	if (!isRushing)
+	if (!isRushing && position.x > actor.getPosition().x)
 	{
 		if (elaspsedTime > 6)
 		{

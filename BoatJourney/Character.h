@@ -19,7 +19,6 @@ class Character : public Actor
 		int getFoodSupply();
 		void gettingFish();
 		void losingLifeSpan();
-
 		void Eat();
 
 	private:

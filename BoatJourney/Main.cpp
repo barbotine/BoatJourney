@@ -19,22 +19,9 @@
 using namespace std;
 using namespace sf;
 
-bool initializeShader(sf::Shader& shader, const string& shaderFilePath, const sf::Vector2f& resolution, sf::Texture& bgTexture) {
-    if (!shader.loadFromFile(shaderFilePath, sf::Shader::Type::Fragment)) {
-        throw "Can't load shader";
-    }
-    shader.setUniform("resolution", resolution);
-    shader.setUniform("backgroundTex", bgTexture);
-    return true;
-}
-
-void updateShaderUniforms(sf::Shader& shader, float time) {
-    shader.setUniform("time", time);
-}
-
 int main()
 {
-    VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    VideoMode desktopMode = VideoMode::getDesktopMode();
     unsigned int screenWidth = desktopMode.size.x;
     unsigned int screenHeight = desktopMode.size.y;
 
@@ -73,44 +60,44 @@ int main()
         throw "Can't load";
     }
 
-        sf::Shader shader;
-        if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
-            throw "Can't load shader texture";
-        }
+    sf::Shader shader;
+    if (!Utils::initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
+        throw "Can't load shader texture";
+    }
 
-        Vector2f resolution(window.getSize().x, window.getSize().y);
+    Vector2f resolution(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
 
-        Clock clock;
-        float currentTime = 0.0f;
-        float previousTime = 0.0f;
-        float deltaTime = 0.0f;
+    Clock clock;
+    float currentTime = 0.0f;
+    float previousTime = 0.0f;
+    float deltaTime = 0.0f;
 
-        Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
-        Button eatingActivityButton = Button(700, 900, 150, 50, Color::Blue, "Eating");
-        CloudManager cloudService = CloudManager();
-        vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
+    Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
+    Button eatingActivityButton = Button(700, 900, 150, 50, Color::Blue, "Eating");
+    CloudManager cloudService = CloudManager();
+    vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
 
-        FishManager fishService = FishManager();
-        vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
+    FishManager fishService = FishManager();
+    vector<Fish> fishes = fishService.createFishes(fishTexture1, fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6);
 
-        Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
-        Boat boat = Boat(Vector2f(resolution.x / 2.f, 0.f), boatTexture);
-        boat.setOriginToBottomCenter();
-        Sun sun = Sun(Vector2f(100, 500.f), sunText, 250.f);
-        Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
-        Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
-        Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1900.f, 700.f), sharkTexture, 300.f);
+    Character character = Character(Vector2f(1800.f, 780.f), characterTexture);
+    Boat boat = Boat(Vector2f(resolution.x / 2.f, 0.f), boatTexture);
+    boat.setOriginToBottomCenter();
+    Sun sun = Sun(Vector2f(100, 500.f), sunText, 250.f);
+    Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
+    Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
+    Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
+    Shark shark = Shark(Vector2f(1900.f, 700.f), sharkTexture, 300.f);
 
-        HungerBar hungerBar(50, 50);
+    HungerBar hungerBar(50, 50);
 
-        bool SharkBoatCollisionDetected = false;
-        int sharkClicks = 0;
-        const int sharkMaxClicks = 5;
-        bool isSharkAlive = true;
-        bool wasSharkPressed = false;
+    bool SharkBoatCollisionDetected = false;
+    int sharkClicks = 0;
+    const int sharkMaxClicks = 5;
+    bool isSharkAlive = true;
+    bool wasSharkPressed = false;
         
-        while (window.isOpen())
+    while (window.isOpen())
         {
             previousTime = currentTime;
             currentTime = clock.getElapsedTime().asSeconds();
@@ -174,7 +161,7 @@ int main()
 
             shark.makeSharkAppear(currentTime);
 
-            updateShaderUniforms(shader, currentTime);
+            Utils::updateShaderUniforms(shader, currentTime);
 
             float boatX = boat.getPosition().x / resolution.x;
 
