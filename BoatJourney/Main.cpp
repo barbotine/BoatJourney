@@ -15,6 +15,7 @@
 #include "FishManager.h"
 #include "ProgressBar.h"
 #include "HungerBar.h"
+#include "Game.h"
 
 using namespace std;
 using namespace sf;
@@ -38,8 +39,6 @@ int main()
     unsigned int screenWidth = desktopMode.size.x;
     unsigned int screenHeight = desktopMode.size.y;
 
-
- 
     RenderWindow window(desktopMode, "Boat Journey", sf::Style::Default);
    
     window.setVerticalSyncEnabled(true);
@@ -68,6 +67,14 @@ int main()
         throw "Can't load";
     }
 
+    sf::Font font;
+    if (!font.openFromFile("../assets/font/Roboto-Italic.ttf"))
+    {
+        std::cerr << "Erreur: Impossible de charger la police 'assets/arial.ttf'\n";
+        std::cerr << "Verifie que le fichier existe et que le chemin est correct.\n";
+        return -1;
+    }
+
     Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6;
     if (!fishTexture2.loadFromFile("../assets/texture/nemo.png") ||
         !fishTexture3.loadFromFile("../assets/texture/dory.png") ||
@@ -79,16 +86,23 @@ int main()
         throw "Can't load";
     }
 
+        Text textDisplay = Text(font);            
+        textDisplay.setString("Game Over");
+        textDisplay.setCharacterSize(30);
+        textDisplay.setFillColor(sf::Color::White);
+        textDisplay.setPosition({ 50.f, 100.f });
+
         sf::Shader shader;
         if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
             throw "Can't load shader texture";
         }
 
-
         Clock clock;
         float currentTime = 0.0f;
         float previousTime = 0.0f;
         float deltaTime = 0.0f;
+
+        Game game = Game();
 
         Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
         Button eatingActivityButton = Button(700, 900, 150, 50, Color::Blue, "Eating");
@@ -131,10 +145,8 @@ int main()
                 if (event->is<sf::Event::Closed>())
                     window.close();
 
-                // Add this block to handle window resize events
                 if (event->is<sf::Event::Resized>())
                 {
-                    // Get the resized event data
                     if (window.getSize() != previousSize)
                     {
                         //auto const size = window.getSize();
@@ -146,101 +158,120 @@ int main()
             }
 
 
-            if (solarActivityButton.isClicked(window)) 
+            switch (game.getCurrentState())
             {
-                character.makingSolarEnergy(sun, window);
-                solarEnergy.setText(character.getSolarResource());
-            }
-
-            if (eatingActivityButton.isClicked(window)) 
-            {
-                character.Eat();
-                foodSupply.setText(character.getFoodSupply());
-                if (character.getFoodSupply() > 0)
+                case GameState::INGAME:
                 {
-                    hungerBar.FillTheBar();
-                }
-            }
+                    if (solarActivityButton.isClicked(window))
+                    {
+                        character.makingSolarEnergy(sun, window);
+                        solarEnergy.setText(character.getSolarResource());
+                    }
 
-            if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
-            {
-                if (!SharkBoatCollisionDetected)
+                    if (eatingActivityButton.isClicked(window))
+                    {
+                        character.Eat();
+                        foodSupply.setText(character.getFoodSupply());
+                        if (character.getFoodSupply() > 0)
+                        {
+                            hungerBar.FillTheBar();
+                        }
+                    }
+
+                    if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
+                    {
+                        if (!SharkBoatCollisionDetected)
+                        {
+                            character.losingLifeSpan(game);
+                            lifespan.setText(character.getLifespan());
+                            SharkBoatCollisionDetected = true;
+                            boat.getSprite().setColor(Color::Red);
+                        }
+                    }
+                    else {
+                        SharkBoatCollisionDetected = false;
+                        boat.getSprite().setColor(sf::Color::White);
+                    }
+
+                    for (Fish& fish : fishes)
+                    {
+                        if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+                        {
+                            character.gettingFish();
+                            foodSupply.setText(character.getFoodSupply());
+                            fish.makeFishDisappear(currentTime);
+                        }
+                    }
+
+                    if (isSharkAlive && Utils::isClicked(shark.getSprite(), window, wasSharkPressed)) {
+                        sharkClicks++;
+                        if (sharkClicks >= sharkMaxClicks) {
+                            shark.makeSharkDisappear(currentTime);
+                            sharkClicks = 0;
+                        }
+                    }
+                    hungerBar.EmptyTheBar(deltaTime);
+
+                    shark.makeSharkAppear(currentTime);
+
+                    updateShaderUniforms(shader, currentTime);
+
+                    float boatX = boat.getPosition().x / resolution.x;
+
+                    float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime, Vector2f(window.getSize().x, window.getSize().y));
+
+                    float x = boat.getSprite().getPosition().x;
+                    float y = (waveHeight + 0.52) * resolution.y;
+
+                    boat.setPosition(Vector2f(x, y), window.getSize(), originalResolution);
+
+                    window.clear();
+                    window.draw(background, &shader);
+
+                    boat.draw(window);
+
+                    if (shark.getIsActive()) {
+                        shark.update(window, deltaTime, boat);
+                        shark.draw(window);
+                    }
+
+                    sun.update(window, deltaTime);
+                    sun.draw(window);
+
+                    for (Cloud& cloud : clouds)
+                    {
+                        cloud.update(window, deltaTime);
+                        cloud.draw(window);
+                    }
+
+                    for (Fish& fish : fishes)
+                    {
+                        fish.update(window, currentTime, deltaTime);
+                        fish.draw(window);
+                    }
+                    hungerBar.update(hungerBar.GetCurrentHunger(), hungerBar.GetMaxHunger());
+                    hungerBar.draw(window);
+                    character.draw(window);
+                    solarEnergy.draw(window);
+                    lifespan.draw(window);
+                    foodSupply.draw(window);
+                    solarActivityButton.draw(window);
+                    eatingActivityButton.draw(window);
+                    break;
+                }
+                case GameState::GAMEOVER:
                 {
-                    character.losingLifeSpan();
-                    lifespan.setText(character.getLifespan());
-                    SharkBoatCollisionDetected = true;
-                    boat.getSprite().setColor(Color::Red);
+                    cout << "Game over" << endl;
+
+                    window.clear(sf::Color::Blue);
+
+                    window.draw(textDisplay);
+
+                    break;
                 }
-            }
-            else {
-                SharkBoatCollisionDetected = false;
-                boat.getSprite().setColor(sf::Color::White);
-            }
 
-            for (Fish& fish : fishes)
-            {
-                if(Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
-                {
-                    character.gettingFish();
-                    foodSupply.setText(character.getFoodSupply());
-                    fish.makeFishDisappear(currentTime);
-                }
-            }
-
-            if (isSharkAlive && Utils::isClicked(shark.getSprite(), window, wasSharkPressed)) {
-                sharkClicks++;
-                if (sharkClicks >= sharkMaxClicks) {
-                    shark.makeSharkDisappear(currentTime);
-                    sharkClicks = 0;
-                }
-            }
-            hungerBar.EmptyTheBar(deltaTime);
-
-            shark.makeSharkAppear(currentTime);
-
-            updateShaderUniforms(shader, currentTime);
-
-            float boatX = boat.getPosition().x / resolution.x;
-
-            float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime, Vector2f(window.getSize().x, window.getSize().y));
-            
-            float x = boat.getSprite().getPosition().x;
-            float y = (waveHeight + 0.52) * resolution.y;
-
-            boat.setPosition(Vector2f(x, y), window.getSize(), originalResolution);
-
-            window.clear();
-            window.draw(background, &shader);
-            
-            boat.draw(window);
-            
-            if (shark.getIsActive()) {
-                shark.update(window, deltaTime, boat);
-                shark.draw(window);
             }
             
-            sun.update(window, deltaTime);
-            sun.draw(window);
-
-            for (Cloud& cloud : clouds)
-            {
-                cloud.update(window, deltaTime);
-                cloud.draw(window);
-            }
-
-            for (Fish& fish : fishes)
-            {
-                fish.update(window, currentTime, deltaTime);
-                fish.draw(window);
-            }
-            hungerBar.update(hungerBar.GetCurrentHunger(), hungerBar.GetMaxHunger());
-            hungerBar.draw(window);
-            character.draw(window);
-            solarEnergy.draw(window);
-            lifespan.draw(window);
-            foodSupply.draw(window);
-            solarActivityButton.draw(window);
-            eatingActivityButton.draw(window);
             window.display();
         }
         return 0;

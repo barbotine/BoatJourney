@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Actor.h"
 #include "Sun.h"
+#include "Game.h"
 
 using namespace sf;
 using namespace std;
@@ -18,7 +19,7 @@ class Character : public Actor
 		int getLifespan();
 		int getFoodSupply();
 		void gettingFish();
-		void losingLifeSpan();
+		void losingLifeSpan(Game& game);
 
 		void Eat();
 

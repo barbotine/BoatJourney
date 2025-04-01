@@ -47,7 +47,7 @@ void Character::gettingFish()
     }
 }
 
-void Character::losingLifeSpan()
+void Character::losingLifeSpan(Game& game)
 {
     if (lifespan > 0)
     {
@@ -55,7 +55,7 @@ void Character::losingLifeSpan()
     }
     else
     {
-        cout << "You lose" << endl;
+        game.setCurrentState(GameState::GAMEOVER);
     }
 }
 
