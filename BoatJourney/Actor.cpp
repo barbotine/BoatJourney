@@ -26,10 +26,20 @@ void Actor::draw(RenderWindow& window)
     window.draw(sprite);
 }
 
-void Actor::setPosition(Vector2f position)
+void Actor::scaleSprite(sf::Sprite& sprite, const sf::Vector2u& windowSize, const sf::Vector2f& originalResolution, bool preserveRatio)
+{
+    float scaleX = windowSize.x / originalResolution.x;
+    float scaleY = windowSize.y / originalResolution.y;
+    float scale = std::min(scaleX, scaleY);
+
+    sprite.setScale({ scale, scale });
+}
+
+void Actor::setPosition(Vector2f position, Vector2u windowSize, Vector2f originalResolution)
 {
     sprite.setPosition(position);
 }
+
 
 void Actor::setOriginToCenterSpriteOrigin()
 {

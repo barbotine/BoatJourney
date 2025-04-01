@@ -35,6 +35,10 @@ void updateShaderUniforms(sf::Shader& shader, float time) {
 int main()
 {
     VideoMode desktopMode = VideoMode::getDesktopMode();
+    unsigned int screenWidth = desktopMode.size.x;
+    unsigned int screenHeight = desktopMode.size.y;
+
+
  
     RenderWindow window(desktopMode, "Boat Journey", sf::Style::Default);
    
@@ -45,6 +49,8 @@ int main()
     RectangleShape background(resolution);
 
     SeaManager seaService = SeaManager();
+
+    const sf::Vector2f originalResolution(screenWidth, screenHeight);
 
     Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture1, foodSupplyTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
@@ -111,6 +117,8 @@ int main()
         const int sharkMaxClicks = 5;
         bool isSharkAlive = true;
         bool wasSharkPressed = false;
+
+        Vector2u previousSize = window.getSize();
         
         while (window.isOpen())
         {
@@ -118,11 +126,25 @@ int main()
             currentTime = clock.getElapsedTime().asSeconds();
             deltaTime = currentTime - previousTime;
 
-            while (const std::optional event = window.pollEvent())
+            while (const std::optional<sf::Event> event = window.pollEvent())
             {
                 if (event->is<sf::Event::Closed>())
                     window.close();
+
+                // Add this block to handle window resize events
+                if (event->is<sf::Event::Resized>())
+                {
+                    // Get the resized event data
+                    if (window.getSize() != previousSize)
+                    {
+                        //auto const size = window.getSize();
+                        //ratio = (float)size.x / (float)size.y;
+                        //// Log the change
+                        //std::cout << "Window resized to " << previousSize.x << "x" << previousSize.y << std::endl;
+                    }
+                }
             }
+
 
             if (solarActivityButton.isClicked(window)) 
             {
@@ -180,9 +202,13 @@ int main()
 
             float boatX = boat.getPosition().x / resolution.x;
 
-            float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime);
+            float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime, Vector2f(window.getSize().x, window.getSize().y));
             
-            boat.setPosition(Vector2f(boat.getSprite().getPosition().x, (waveHeight + 0.5f) * resolution.y));
+            float x = boat.getSprite().getPosition().x;
+            float y = (waveHeight + 0.52) * resolution.y;
+
+            boat.setPosition(Vector2f(x, y), window.getSize(), originalResolution);
+
             window.clear();
             window.draw(background, &shader);
             

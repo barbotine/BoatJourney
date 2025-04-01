@@ -12,8 +12,8 @@ uniform float textureScale;
 * speed - wave speed
 * phase - wave phase 
 */
-float wave(vec2 uv, float frequency, float amplitude, float speed, float phase) {
-    return sin(uv.x * frequency + time * speed + phase) * amplitude;
+float wave(float x, float frequency, float amplitude, float speed, float phase) {
+    return sin(x * frequency + time * speed + phase) * amplitude;
 }
 
 void main() {
@@ -23,10 +23,14 @@ void main() {
 
     uv.x *= resolution.x / resolution.y;
 
+    //uv.x *= resolution.x;
+    //uv.y *= resolution.y;
+    
     float y = 0.0;
-    y += wave(uv, 10.0, 0.015, 2.0, 0.0); 
-    y += wave(uv, 15.0, 0.01, 3.0, 1.0);
-    y += wave(uv, 20.0, 0.005, 1.5, 2.0);
+    y += wave(uv.x, 10.0, 0.015, 2.0, 0.0); 
+    y += wave(uv.x, 15.0, 0.01, 3.0, 1.0);
+    y += wave(uv.x, 20.0, 0.005, 1.5, 2.0);
+    
 
     vec3 color = vec3(0.0, 0.3, 0.6);
 

@@ -18,7 +18,8 @@ class Actor
 		virtual void update(float deltaTime);
 		Vector2f getPosition();
 		void draw(RenderWindow& window);
-		void setPosition(Vector2f position);
+		void scaleSprite(sf::Sprite& sprite, const sf::Vector2u& windowSize, const sf::Vector2f& originalResolution, bool preserveRatio);
+		void setPosition(Vector2f position, Vector2u windowSize, Vector2f originalResolution);
 		void setOriginToCenterSpriteOrigin();
 		void setOriginToBottomCenter();
 		bool isInsideWindowFromRight(RenderWindow& window);
