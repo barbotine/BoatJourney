@@ -20,7 +20,7 @@ class Shark : public Actor
 
 		bool SharkBoatCollisionDetected;
 		int sharkClicks;
-		const int sharkMaxClicks;
+		int sharkMaxClicks;
 		bool isSharkAlive;
 		bool wasSharkPressed;
 
@@ -38,17 +38,19 @@ class Shark : public Actor
 
 		void setSharkBoatCollisionDetected(bool value);
 
-		int getSharkClicks() const;
+		int getSharkClicks();
 
 		void setSharkClicks(int value);
 
-		int getSharkMaxClicks() const;
+		void incrementeClick();
 
-		bool getIsSharkAlive() const;
+		int getSharkMaxClicks();
+
+		bool getIsSharkAlive();
 
 		void setIsSharkAlive(bool value);
 
-		bool getWasSharkPressed() const;
+		bool& getWasSharkPressed();
 
 		void setWasSharkPressed(bool value);
 

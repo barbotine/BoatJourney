@@ -95,13 +95,14 @@ void Shark::collidesWith(Actor& actor)
 bool Shark::getSharkBoatCollisionDetected() { return SharkBoatCollisionDetected; }
 void Shark::setSharkBoatCollisionDetected(bool value) { SharkBoatCollisionDetected = value; }
 
-int Shark::getSharkClicks() const { return sharkClicks; }
+int Shark::getSharkClicks(){ return sharkClicks; }
 void Shark::setSharkClicks(int value) { sharkClicks = value; }
+void Shark::incrementeClick() { sharkClicks++;  }
 
-int Shark::getSharkMaxClicks() const { return sharkMaxClicks; }
+int Shark::getSharkMaxClicks(){ return sharkMaxClicks; }
 
-bool Shark::getIsSharkAlive() const { return isSharkAlive; }
+bool Shark::getIsSharkAlive(){ return isSharkAlive; }
 void Shark::setIsSharkAlive(bool value) { isSharkAlive = value; }
 
-bool Shark::getWasSharkPressed() const { return wasSharkPressed; }
+bool& Shark::getWasSharkPressed(){ return wasSharkPressed; }
 void Shark::setWasSharkPressed(bool value) { wasSharkPressed = value; }

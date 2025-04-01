@@ -134,11 +134,12 @@ int main()
 
         HungerBar hungerBar(50, 50);
 
-        bool SharkBoatCollisionDetected = false;
-        int sharkClicks = 0;
-        const int sharkMaxClicks = 5;
-        bool isSharkAlive = true;
-        bool wasSharkPressed = false;
+        bool isSomeSharkColliding = false;
+        //bool SharkBoatCollisionDetected = false;
+        //int sharkClicks = 0;
+        //const int sharkMaxClicks = 5;
+        //bool isSharkAlive = true;
+        //bool wasSharkPressed = false;
 
         Vector2u previousSize = window.getSize();
         
@@ -190,18 +191,34 @@ int main()
                     {
                         if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
                         {
-                            if (!SharkBoatCollisionDetected)
+                            if (!shark.getSharkBoatCollisionDetected())
                             {
                                 character.losingLifeSpan(game);
                                 lifespan.setText(character.getLifespan());
-                                SharkBoatCollisionDetected = true;
-                                boat.getSprite().setColor(Color::Red);
+                                shark.setSharkBoatCollisionDetected(true);
+                            }
+                            isSomeSharkColliding = true;
+                        }
+                        else
+                        {
+                            shark.setSharkBoatCollisionDetected(false);
+                        }
+
+                        if (shark.getIsSharkAlive() && Utils::isClicked(shark.getSprite(), window, shark.getWasSharkPressed())) {
+                            shark.incrementeClick();
+                            if (shark.getSharkClicks() >= shark.getSharkMaxClicks()) {
+                                shark.makeSharkDisappear(currentTime);
+                                shark.setSharkClicks(0);
                             }
                         }
-                        else {
-                            SharkBoatCollisionDetected = false;
-                            boat.getSprite().setColor(sf::Color::White);
-                        }
+                    }
+                    if (isSomeSharkColliding)
+                    {
+                        boat.getSprite().setColor(Color::Red);
+                    }
+                    else
+                    {
+                        boat.getSprite().setColor(Color::White);
                     }
                    
 
@@ -215,13 +232,7 @@ int main()
                         }
                     }
 
-                    if (isSharkAlive && Utils::isClicked(shark.getSprite(), window, wasSharkPressed)) {
-                        sharkClicks++;
-                        if (sharkClicks >= sharkMaxClicks) {
-                            shark.makeSharkDisappear(currentTime);
-                            sharkClicks = 0;
-                        }
-                    }
+                  
 
                     if (hungerBar.GetCurrentHunger() == 0)
                     {
@@ -230,7 +241,10 @@ int main()
 
                     hungerBar.EmptyTheBar(deltaTime);
 
-                    shark.makeSharkAppear(currentTime);
+                    for (Shark& shark : sharks)
+                    {
+                        shark.makeSharkAppear(currentTime);
+                    }
 
                     updateShaderUniforms(shader, currentTime);
 
