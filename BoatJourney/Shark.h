@@ -18,6 +18,12 @@ class Shark : public Actor
 		bool isRushing;
 		float elaspsedTime;
 
+		bool SharkBoatCollisionDetected;
+		int sharkClicks;
+		const int sharkMaxClicks;
+		bool isSharkAlive;
+		bool wasSharkPressed;
+
 	public:
 		Shark(Vector2f position, Texture& texture, float speed);
 		void makeSharkDisappear(float currentTime);
@@ -27,5 +33,24 @@ class Shark : public Actor
 		bool getIsActive();
 		void rushingOnActor(Actor& actor, float deltaTime);
 		void collidesWith(Actor& actor);
+
+		bool getSharkBoatCollisionDetected();
+
+		void setSharkBoatCollisionDetected(bool value);
+
+		int getSharkClicks() const;
+
+		void setSharkClicks(int value);
+
+		int getSharkMaxClicks() const;
+
+		bool getIsSharkAlive() const;
+
+		void setIsSharkAlive(bool value);
+
+		bool getWasSharkPressed() const;
+
+		void setWasSharkPressed(bool value);
+
 };
 

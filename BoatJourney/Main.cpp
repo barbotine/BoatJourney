@@ -16,6 +16,7 @@
 #include "ProgressBar.h"
 #include "HungerBar.h"
 #include "Game.h"
+#include "SharkManager.h"
 
 using namespace std;
 using namespace sf;
@@ -54,7 +55,7 @@ int main()
 
     const sf::Vector2f originalResolution(screenWidth, screenHeight);
 
-    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, solarEnergyTexture, heartTexture, sharkTexture, fishTexture1, foodSupplyTexture;
+    Texture bg, cloudText1, cloudText2, sunText, boatTexture, characterTexture, sharkTexture2, solarEnergyTexture, heartTexture, sharkTexture, fishTexture1, foodSupplyTexture;
     if (!bg.loadFromFile("../assets/texture/bg.jpg") ||
         !cloudText1.loadFromFile("../assets/texture/cloud1.png") ||
         !cloudText2.loadFromFile("../assets/texture/cloud2.png") ||
@@ -64,20 +65,19 @@ int main()
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
         !sharkTexture.loadFromFile("../assets/texture/shark.png") ||
+        !sharkTexture2.loadFromFile("../assets/texture/shark.png") ||
         !fishTexture1.loadFromFile("../assets/texture/fish.png") ||
         !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
         throw "Can't load";
     }
 
-    // 2. Charger la police
     sf::Font font;
-    // --- ATTENTION : Mets le bon chemin vers TON fichier de police ---
     if (!font.openFromFile("../assets/font/Roboto-Italic.ttf"))
     {
         std::cerr << "Erreur: Impossible de charger la police 'assets/arial.ttf'\n";
         std::cerr << "Verifie que le fichier existe et que le chemin est correct.\n";
-        return -1; // Quitte si la police ne peut pas être chargée
+        return -1;
     }
 
     Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6;
@@ -101,7 +101,6 @@ int main()
         if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
             throw "Can't load shader texture";
         }
-
 
         Clock clock;
         float currentTime = 0.0f;
@@ -128,7 +127,10 @@ int main()
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1900.f, 700.f), sharkTexture, 300.f);
+        Shark shark = Shark(Vector2f(1900.f, 900.f), sharkTexture, 300.f);
+
+        SharkManager sharkService = SharkManager();
+        vector<Shark> sharks = sharkService.createSharks(sharkTexture, sharkTexture2, sharkTexture2);
 
         HungerBar hungerBar(50, 50);
 
@@ -184,20 +186,24 @@ int main()
                         }
                     }
 
-                    if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
+                    for (Shark& shark : sharks)
                     {
-                        if (!SharkBoatCollisionDetected)
+                        if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
                         {
-                            character.losingLifeSpan(game);
-                            lifespan.setText(character.getLifespan());
-                            SharkBoatCollisionDetected = true;
-                            boat.getSprite().setColor(Color::Red);
+                            if (!SharkBoatCollisionDetected)
+                            {
+                                character.losingLifeSpan(game);
+                                lifespan.setText(character.getLifespan());
+                                SharkBoatCollisionDetected = true;
+                                boat.getSprite().setColor(Color::Red);
+                            }
+                        }
+                        else {
+                            SharkBoatCollisionDetected = false;
+                            boat.getSprite().setColor(sf::Color::White);
                         }
                     }
-                    else {
-                        SharkBoatCollisionDetected = false;
-                        boat.getSprite().setColor(sf::Color::White);
-                    }
+                   
 
                     for (Fish& fish : fishes)
                     {
@@ -216,6 +222,12 @@ int main()
                             sharkClicks = 0;
                         }
                     }
+
+                    if (hungerBar.GetCurrentHunger() == 0)
+                    {
+                        game.setCurrentState(GameState::GAMEOVER);
+                    }
+
                     hungerBar.EmptyTheBar(deltaTime);
 
                     shark.makeSharkAppear(currentTime);
@@ -236,11 +248,14 @@ int main()
 
                     boat.draw(window);
 
-                    if (shark.getIsActive()) {
-                        shark.update(window, deltaTime, boat);
-                        shark.draw(window);
+                    for (Shark& shark : sharks)
+                    {
+                        if (shark.getIsActive()) {
+                            shark.update(window, deltaTime, boat);
+                            shark.draw(window);
+                        }
                     }
-
+                  
                     sun.update(window, deltaTime);
                     sun.draw(window);
 
