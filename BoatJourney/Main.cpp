@@ -20,6 +20,9 @@
 using namespace std;
 using namespace sf;
 
+const unsigned int FIXED_WIDTH = 1920;
+const unsigned int FIXED_HEIGHT = 1080;
+
 bool initializeShader(sf::Shader& shader, const string& shaderFilePath, const sf::Vector2f& resolution, sf::Texture& bgTexture) {
     if (!shader.loadFromFile(shaderFilePath, sf::Shader::Type::Fragment)) {
         throw "Can't load shader";
@@ -39,7 +42,7 @@ int main()
     unsigned int screenWidth = desktopMode.size.x;
     unsigned int screenHeight = desktopMode.size.y;
 
-    RenderWindow window(desktopMode, "Boat Journey", sf::Style::Default);
+    RenderWindow window(VideoMode({ FIXED_WIDTH, FIXED_HEIGHT }), "Boat Journey", sf::Style::Titlebar | sf::Style::Close);
    
     window.setVerticalSyncEnabled(true);
     Vector2u windowSize = window.getSize();
@@ -67,12 +70,14 @@ int main()
         throw "Can't load";
     }
 
+    // 2. Charger la police
     sf::Font font;
+    // --- ATTENTION : Mets le bon chemin vers TON fichier de police ---
     if (!font.openFromFile("../assets/font/Roboto-Italic.ttf"))
     {
         std::cerr << "Erreur: Impossible de charger la police 'assets/arial.ttf'\n";
         std::cerr << "Verifie que le fichier existe et que le chemin est correct.\n";
-        return -1;
+        return -1; // Quitte si la police ne peut pas être chargée
     }
 
     Texture fishTexture2, fishTexture3, fishTexture4, fishTexture5, fishTexture6;
@@ -86,16 +91,17 @@ int main()
         throw "Can't load";
     }
 
-        Text textDisplay = Text(font);            
-        textDisplay.setString("Game Over");
-        textDisplay.setCharacterSize(30);
-        textDisplay.setFillColor(sf::Color::White);
-        textDisplay.setPosition({ 50.f, 100.f });
+    Text textDisplay = Text(font);            
+    textDisplay.setString("Game Over");
+    textDisplay.setCharacterSize(30);
+    textDisplay.setFillColor(sf::Color::White);
+    textDisplay.setPosition({ 50.f, 100.f });
 
         sf::Shader shader;
         if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
             throw "Can't load shader texture";
         }
+
 
         Clock clock;
         float currentTime = 0.0f;

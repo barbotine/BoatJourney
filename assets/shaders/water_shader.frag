@@ -5,13 +5,6 @@ uniform vec2 resolution;
 uniform sampler2D backgroundTex;
 uniform float textureScale;
 
-/*
-* uv - horizontal texture coordinates
-* frequency - number of waves
-* amplitude - wave height
-* speed - wave speed
-* phase - wave phase 
-*/
 float wave(float x, float frequency, float amplitude, float speed, float phase) {
     return sin(x * frequency + time * speed + phase) * amplitude;
 }
@@ -22,9 +15,6 @@ void main() {
     uv.y = 1.0 - uv.y;
 
     uv.x *= resolution.x / resolution.y;
-
-    //uv.x *= resolution.x;
-    //uv.y *= resolution.y;
     
     float y = 0.0;
     y += wave(uv.x, 10.0, 0.015, 2.0, 0.0); 
