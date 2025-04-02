@@ -25,7 +25,12 @@ void Shark::makeSharkAppear(float currentTime)
             float maxY = 900.0f;
             float randomY = minY + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxY - minY)));
 
-            sprite.setPosition(Vector2f(1900.f, randomY));
+
+            float minX = 1900.f;
+            float maxX = 5000.f;
+            float randomX = minX + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxX - minX)));
+
+            sprite.setPosition(Vector2f(randomX, randomY));
             this->isActive = true;
         }
     }

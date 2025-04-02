@@ -65,7 +65,7 @@ int main()
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
         !sharkTexture.loadFromFile("../assets/texture/shark.png") ||
-        !sharkTexture2.loadFromFile("../assets/texture/shark.png") ||
+        !sharkTexture2.loadFromFile("../assets/texture/shark2.png") ||
         !fishTexture1.loadFromFile("../assets/texture/fish.png") ||
         !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
@@ -135,13 +135,6 @@ int main()
         HungerBar hungerBar(50, 50);
 
         bool isSomeSharkColliding = false;
-        //bool SharkBoatCollisionDetected = false;
-        //int sharkClicks = 0;
-        //const int sharkMaxClicks = 5;
-        //bool isSharkAlive = true;
-        //bool wasSharkPressed = false;
-
-        Vector2u previousSize = window.getSize();
         
         while (window.isOpen())
         {
@@ -156,13 +149,13 @@ int main()
 
                 if (event->is<sf::Event::Resized>())
                 {
-                    if (window.getSize() != previousSize)
-                    {
-                        //auto const size = window.getSize();
-                        //ratio = (float)size.x / (float)size.y;
-                        //// Log the change
-                        //std::cout << "Window resized to " << previousSize.x << "x" << previousSize.y << std::endl;
-                    }
+                    //if (window.getSize() != previousSize)
+                    //{
+                    //    //auto const size = window.getSize();
+                    //    //ratio = (float)size.x / (float)size.y;
+                    //    //// Log the change
+                    //    //std::cout << "Window resized to " << previousSize.x << "x" << previousSize.y << std::endl;
+                    //}
                 }
             }
 
@@ -186,11 +179,12 @@ int main()
                             hungerBar.FillTheBar();
                         }
                     }
-
+                    isSomeSharkColliding = false;
                     for (Shark& shark : sharks)
                     {
                         if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
                         {
+                            std::cout << "Collision détectée !" << std::endl;
                             if (!shark.getSharkBoatCollisionDetected())
                             {
                                 character.losingLifeSpan(game);
@@ -262,9 +256,25 @@ int main()
 
                     boat.draw(window);
 
+                    sf::RectangleShape boatBoundsRect;
+                    boatBoundsRect.setSize(sf::Vector2f(boat.getSprite().getGlobalBounds().size));
+                    boatBoundsRect.setPosition(boat.getSprite().getGlobalBounds().position);
+                    boatBoundsRect.setFillColor(sf::Color::Transparent);
+                    boatBoundsRect.setOutlineColor(sf::Color::Green);
+                    boatBoundsRect.setOutlineThickness(1.f);
+                    window.draw(boatBoundsRect);
+
+
                     for (Shark& shark : sharks)
                     {
                         if (shark.getIsActive()) {
+                            sf::RectangleShape sharkBoundsRect;
+                            sharkBoundsRect.setSize(sf::Vector2f(shark.getSprite().getGlobalBounds().size));
+                            sharkBoundsRect.setPosition(shark.getSprite().getGlobalBounds().position);
+                            sharkBoundsRect.setFillColor(sf::Color::Transparent);
+                            sharkBoundsRect.setOutlineColor(sf::Color::Yellow);
+                            sharkBoundsRect.setOutlineThickness(1.f);
+                            window.draw(sharkBoundsRect);
                             shark.update(window, deltaTime, boat);
                             shark.draw(window);
                         }
