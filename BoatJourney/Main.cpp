@@ -65,7 +65,7 @@ int main()
         !solarEnergyTexture.loadFromFile("../assets/texture/solarEnergy.png") ||
         !heartTexture.loadFromFile("../assets/texture/heart.png") ||
         !sharkTexture.loadFromFile("../assets/texture/shark.png") ||
-        !sharkTexture2.loadFromFile("../assets/texture/shark2.png") ||
+        !sharkTexture2.loadFromFile("../assets/texture/pirhana.png") ||
         !fishTexture1.loadFromFile("../assets/texture/fish.png") ||
         !foodSupplyTexture.loadFromFile("../assets/texture/foodSupply.png")
         ) {
@@ -96,6 +96,24 @@ int main()
     textDisplay.setCharacterSize(30);
     textDisplay.setFillColor(sf::Color::White);
     textDisplay.setPosition({ 50.f, 100.f });
+
+    RectangleShape gameOverOverlay;
+    gameOverOverlay.setSize(resolution);
+    gameOverOverlay.setFillColor(sf::Color(0, 0, 0, 180)); // Semi-transparent black
+
+    Text gameOverText(font);
+    gameOverText.setCharacterSize(80);
+    gameOverText.setString("GAME OVER");
+    gameOverText.setFillColor(sf::Color::Red);
+    gameOverText.setStyle(sf::Text::Bold);
+    // Center text
+    FloatRect textRect = gameOverText.getLocalBounds();
+    gameOverText.setOrigin(Vector2f(textRect.position.x + textRect.size.x / 2.0f, textRect.position.y + textRect.size.y/ 2.0f));
+    gameOverText.setPosition(Vector2f(resolution.x / 2.0f, resolution.y / 2.0f - 50.f));
+
+    float button_x = resolution.x / 2.0f - 100.f;
+    float button_y = resolution.y / 2.0f + 50.f;
+    Button replayButton = Button(button_x, button_y, 200.f, 60.f, sf::Color::Green, "Replay");
 
         sf::Shader shader;
         if (!initializeShader(shader, "../assets/shaders/water_shader.frag", sf::Vector2f(window.getSize()), bg)) {
@@ -256,25 +274,12 @@ int main()
 
                     boat.draw(window);
 
-                    sf::RectangleShape boatBoundsRect;
-                    boatBoundsRect.setSize(sf::Vector2f(boat.getSprite().getGlobalBounds().size));
-                    boatBoundsRect.setPosition(boat.getSprite().getGlobalBounds().position);
-                    boatBoundsRect.setFillColor(sf::Color::Transparent);
-                    boatBoundsRect.setOutlineColor(sf::Color::Green);
-                    boatBoundsRect.setOutlineThickness(1.f);
-                    window.draw(boatBoundsRect);
 
 
                     for (Shark& shark : sharks)
                     {
                         if (shark.getIsActive()) {
-                            sf::RectangleShape sharkBoundsRect;
-                            sharkBoundsRect.setSize(sf::Vector2f(shark.getSprite().getGlobalBounds().size));
-                            sharkBoundsRect.setPosition(shark.getSprite().getGlobalBounds().position);
-                            sharkBoundsRect.setFillColor(sf::Color::Transparent);
-                            sharkBoundsRect.setOutlineColor(sf::Color::Yellow);
-                            sharkBoundsRect.setOutlineThickness(1.f);
-                            window.draw(sharkBoundsRect);
+                            
                             shark.update(window, deltaTime, boat);
                             shark.draw(window);
                         }
@@ -306,11 +311,9 @@ int main()
                 }
                 case GameState::GAMEOVER:
                 {
-                    cout << "Game over" << endl;
-
-                    window.clear(sf::Color::Blue);
-
-                    window.draw(textDisplay);
+                    window.draw(gameOverOverlay);
+                    window.draw(gameOverText);
+                    replayButton.draw(window);
 
                     break;
                 }
