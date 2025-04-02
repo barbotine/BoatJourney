@@ -37,6 +37,10 @@ void updateShaderUniforms(sf::Shader& shader, float time) {
     shader.setUniform("time", time);
 }
 
+void addTextOnGameOverScreen()
+{
+}
+
 int main()
 {
     VideoMode desktopMode = VideoMode::getDesktopMode();
@@ -91,11 +95,9 @@ int main()
         throw "Can't load";
     }
 
-    Text textDisplay = Text(font);            
-    textDisplay.setString("Game Over");
-    textDisplay.setCharacterSize(30);
-    textDisplay.setFillColor(sf::Color::White);
-    textDisplay.setPosition({ 50.f, 100.f });
+
+
+
 
     RectangleShape gameOverOverlay;
     gameOverOverlay.setSize(resolution);
@@ -106,6 +108,7 @@ int main()
     gameOverText.setString("GAME OVER");
     gameOverText.setFillColor(sf::Color::Red);
     gameOverText.setStyle(sf::Text::Bold);
+
     // Center text
     FloatRect textRect = gameOverText.getLocalBounds();
     gameOverText.setOrigin(Vector2f(textRect.position.x + textRect.size.x / 2.0f, textRect.position.y + textRect.size.y/ 2.0f));
@@ -127,8 +130,17 @@ int main()
 
         Game game = Game();
 
-        Button solarActivityButton = Button(900, 900, 150, 50, Color::Blue, "Solar recharge");
-        Button eatingActivityButton = Button(700, 900, 150, 50, Color::Blue, "Eating");
+        Color buttonFillColor(205, 133, 63); // Marron clair
+        Color buttonOutlineColor(139, 69, 19); // Marron foncé
+
+        Button solarActivityButton = Button(900, 900, 150, 50, buttonFillColor, "Solar recharge");
+        solarActivityButton.setOutlineColor(buttonOutlineColor);
+        solarActivityButton.setOutlineThickness(3);
+
+        Button eatingActivityButton = Button(700, 900, 150, 50, buttonFillColor, "Eating");
+        eatingActivityButton.setOutlineColor(buttonOutlineColor);
+        eatingActivityButton.setOutlineThickness(3);
+
         CloudManager cloudService = CloudManager();
         vector<Cloud> clouds = cloudService.createClouds(cloudText1, cloudText2);
 

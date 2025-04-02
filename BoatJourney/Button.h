@@ -12,10 +12,14 @@ public:
     void draw(sf::RenderWindow& window);
     bool isMouseOver(sf::RenderWindow& window);
 
+    void setOutlineColor(Color color);
+
+    void setOutlineThickness(float thickness);
+
 private:
-    sf::RectangleShape shape;
-    sf::Font font;
-    sf::Text text;
+    RectangleShape shape;
+    Font font;
+    Text text;
     bool wasPressed = false;
 };
 

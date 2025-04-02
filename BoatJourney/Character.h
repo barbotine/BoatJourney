@@ -18,9 +18,9 @@ class Character : public Actor
 		int getSolarResource();
 		int getLifespan();
 		int getFoodSupply();
+		int getNumberOfEnemyKill();
 		void gettingFish();
 		void losingLifeSpan(Game& game);
-
 		void Eat();
 
 	private:
@@ -28,5 +28,6 @@ class Character : public Actor
 		int lifespan;
 		int foodSupply;
 		int water;
+		int numberOfEnemyKill;
 };
 

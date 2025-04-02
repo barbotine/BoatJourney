@@ -8,6 +8,7 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
     this->lifespan = 3;
     this->foodSupply = 0;
     this->water = 0;
+    this->numberOfEnemyKill = 0;
 }
 
 void Character::makingSolarEnergy(Sun &sun, RenderWindow& window)
@@ -39,6 +40,11 @@ int Character::getFoodSupply()
     return foodSupply;
 }
 
+int Character::getNumberOfEnemyKill()
+{
+    return numberOfEnemyKill;
+}
+
 void Character::gettingFish()
 {
     if (isMaxResourceNotReach(foodSupply))
@@ -66,3 +72,4 @@ void Character::Eat()
 }
 
     
+

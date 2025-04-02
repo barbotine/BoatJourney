@@ -42,3 +42,11 @@ bool Button::isMouseOver(sf::RenderWindow& window) {
     return shape.getGlobalBounds().contains(Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)));
 }
 
+
+void Button::setOutlineColor(Color color) {
+    shape.setOutlineColor(color);
+}
+
+void Button::setOutlineThickness(float thickness) {
+    shape.setOutlineThickness(thickness);
+}
