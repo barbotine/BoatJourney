@@ -5,7 +5,7 @@ Character::Character(Vector2f position, Texture& texture) : Actor(position, text
     sprite.setTexture(texture);
     sprite.setPosition(position);
     this->solarResource = 0;
-    this->lifespan = 3;
+    this->lifespan = 5;
     this->foodSupply = 0;
     this->water = 0;
     this->numberOfEnemyKill = 0;

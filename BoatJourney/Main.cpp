@@ -163,8 +163,6 @@ int main()
         vector<Shark> sharks = sharkService.createSharks(sharkTexture, sharkTexture2, sharkTexture2);
 
         HungerBar hungerBar(50, 50);
-
-        bool isSomeSharkColliding = false;
         
         while (window.isOpen())
         {
@@ -192,149 +190,157 @@ int main()
 
             switch (game.getCurrentState())
             {
-                case GameState::INGAME:
+            case GameState::INGAME:
+            {
+                if (solarActivityButton.isClicked(window))
                 {
-                    if (solarActivityButton.isClicked(window))
-                    {
-                        character.makingSolarEnergy(sun, window);
-                        solarEnergy.setText(character.getSolarResource());
-                    }
+                    character.makingSolarEnergy(sun, window);
+                    solarEnergy.setText(character.getSolarResource());
+                }
 
-                    if (eatingActivityButton.isClicked(window))
+                if (eatingActivityButton.isClicked(window))
+                {
+                    character.Eat();
+                    foodSupply.setText(character.getFoodSupply());
+                    if (character.getFoodSupply() > 0)
                     {
-                        character.Eat();
-                        foodSupply.setText(character.getFoodSupply());
-                        if (character.getFoodSupply() > 0)
+                        hungerBar.FillTheBar();
+                    }
+                }
+
+               bool isSomeSharkColliding = false;
+                for (Shark& shark : sharks)
+                {
+                    if (!shark.getIsActive()) {
+                        continue;
+                    }
+                    
+                    if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
+                    {
+                        isSomeSharkColliding = true;
+
+                        if (!shark.getSharkBoatCollisionDetected())
                         {
-                            hungerBar.FillTheBar();
+                            character.losingLifeSpan(game);
+                            lifespan.setText(character.getLifespan());
+                            shark.setSharkBoatCollisionDetected(true);
+                            std::cout << "Collision commence avec un Requin!" << std::endl;
+                            shark.makeSharkDisappear(currentTime);
                         }
                     }
-                    isSomeSharkColliding = false;
-                    for (Shark& shark : sharks)
+                    else
                     {
-                        if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
+                        if (shark.getSharkBoatCollisionDetected())
                         {
-                            
-                            
-                            if (!shark.getSharkBoatCollisionDetected())
-                            {
-                                isSomeSharkColliding = true;
-                                character.losingLifeSpan(game);
-                                lifespan.setText(character.getLifespan());
-                                shark.setSharkBoatCollisionDetected(true); 
-                                std::cout << "Collision détectée !" << std::endl;
-                            }
-                        }
-                        else
-                        {
+                            std::cout << "Collision finie avec un Requin!" << std::endl;
                             shark.setSharkBoatCollisionDetected(false);
                         }
                     }
-                    for (Shark& shark : sharks)
-                    {
-                        if (shark.getIsActive() && Utils::isClicked(shark.getSprite(), window, shark.getWasSharkPressed())) {
-                            shark.incrementeClick();
-                            if (shark.getSharkClicks() >= shark.getSharkMaxClicks()) {
-                                shark.makeSharkDisappear(currentTime);
-                                shark.setSharkClicks(0);
 
-                            }
+                    if (shark.getIsActive() && Utils::isClicked(shark.getSprite(), window, shark.getWasSharkPressed())) {
+                        shark.incrementeClick();
+                        if (shark.getSharkClicks() >= shark.getSharkMaxClicks()) {
+                            shark.makeSharkDisappear(currentTime);
+                            shark.setSharkClicks(0);
+
                         }
                     }
-
-                    if (isSomeSharkColliding)
-                    {
-                        boat.getSprite().setColor(Color::Red);
-                    }
-                    else {
-                        boat.getSprite().setColor(Color::White);
-                    }
-                   
-
-                    for (Fish& fish : fishes)
-                    {
-                        if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
-                        {
-                            character.gettingFish();
-                            foodSupply.setText(character.getFoodSupply());
-                            fish.makeFishDisappear(currentTime);
-                        }
-                    }
-
-                    if (hungerBar.GetCurrentHunger() == 0)
-                    {
-                        game.setCurrentState(GameState::GAMEOVER);
-                    }
-
-                    hungerBar.EmptyTheBar(deltaTime);
-
-                    for (Shark& shark : sharks)
-                    {
-                        shark.makeSharkAppear(currentTime);
-                    }
-
-                    updateShaderUniforms(shader, currentTime);
-
-                    float boatX = boat.getPosition().x / resolution.x;
-
-                    float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime, Vector2f(window.getSize().x, window.getSize().y));
-
-                    float x = boat.getSprite().getPosition().x;
-                    float y = (waveHeight + 0.52) * resolution.y;
-
-                    boat.setPosition(Vector2f(x, y), window.getSize(), originalResolution);
-
-                    window.clear();
-                    window.draw(background, &shader);
-
-                    boat.draw(window);
-
-
-
-                    for (Shark& shark : sharks)
-                    {
-                        if (shark.getIsActive()) {
-                            
-                            shark.update(window, deltaTime, boat);
-                            shark.draw(window);
-                        }
-                    }
-                  
-                    sun.update(window, deltaTime);
-                    sun.draw(window);
-
-                    for (Cloud& cloud : clouds)
-                    {
-                        cloud.update(window, deltaTime);
-                        cloud.draw(window);
-                    }
-
-                    for (Fish& fish : fishes)
-                    {
-                        fish.update(window, currentTime, deltaTime);
-                        fish.draw(window);
-                    }
-                    hungerBar.update(hungerBar.GetCurrentHunger(), hungerBar.GetMaxHunger());
-                    hungerBar.draw(window);
-                    character.draw(window);
-                    solarEnergy.draw(window);
-                    lifespan.draw(window);
-                    foodSupply.draw(window);
-                    solarActivityButton.draw(window);
-                    eatingActivityButton.draw(window);
-                    break;
                 }
-                case GameState::GAMEOVER:
+
+
+                if (isSomeSharkColliding)
                 {
-                    window.draw(gameOverOverlay);
-                    window.draw(gameOverText);
-                    replayButton.draw(window);
-
-                    break;
+                    boat.getSprite().setColor(Color::Red);
                 }
+                else {
+                    boat.getSprite().setColor(Color::White);
+                }
+
+
+                for (Fish& fish : fishes)
+                {
+                    if (Utils::isClicked(fish.getSprite(), window, fish.getWasClicked()))
+                    {
+                        character.gettingFish();
+                        foodSupply.setText(character.getFoodSupply());
+                        fish.makeFishDisappear(currentTime);
+                    }
+                }
+
+                if (hungerBar.GetCurrentHunger() == 0)
+                {
+                    game.setCurrentState(GameState::GAMEOVER);
+                }
+
+                hungerBar.EmptyTheBar(deltaTime);
+
+                for (Shark& shark : sharks)
+                {
+                    shark.makeSharkAppear(currentTime);
+                }
+
+                updateShaderUniforms(shader, currentTime);
+
+                float boatX = boat.getPosition().x / resolution.x;
+
+                float waveHeight = seaService.calculateWaveHeight(boat.getSprite().getPosition().x, currentTime, Vector2f(window.getSize().x, window.getSize().y));
+
+                float x = boat.getSprite().getPosition().x;
+                float y = (waveHeight + 0.52) * resolution.y;
+
+                boat.setPosition(Vector2f(x, y), window.getSize(), originalResolution);
+
+                window.clear();
+                window.draw(background, &shader);
+
+                boat.draw(window);
+
+
+
+                for (Shark& shark : sharks)
+                {
+                    if (shark.getIsActive()) {
+
+                        shark.update(window, deltaTime, boat);
+                        shark.draw(window);
+                    }
+                }
+
+                sun.update(window, deltaTime);
+                sun.draw(window);
+
+                for (Cloud& cloud : clouds)
+                {
+                    cloud.update(window, deltaTime);
+                    cloud.draw(window);
+                }
+
+                for (Fish& fish : fishes)
+                {
+                    fish.update(window, currentTime, deltaTime);
+                    fish.draw(window);
+                }
+                hungerBar.update(hungerBar.GetCurrentHunger(), hungerBar.GetMaxHunger());
+                hungerBar.draw(window);
+                character.draw(window);
+                solarEnergy.draw(window);
+                lifespan.draw(window);
+                foodSupply.draw(window);
+                solarActivityButton.draw(window);
+                eatingActivityButton.draw(window);
+                break;
+            }
+            case GameState::GAMEOVER:
+            {
+                window.draw(gameOverOverlay);
+                window.draw(gameOverText);
+                replayButton.draw(window);
+
+                break;
+            }
 
             }
-            
+
             window.display();
         }
         return 0;
