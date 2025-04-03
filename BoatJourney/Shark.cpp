@@ -83,7 +83,7 @@ bool Shark::getIsActive()
 
 void Shark::rushingOnActor(Actor& actor, float deltaTime)
 {
-	Vector2f direction = Utils::normalize(actor.getPosition() - sprite.getPosition());
+	Vector2f direction = Utils::normalize(actor.getSprite().getPosition() - sprite.getPosition());
 
 	sprite.move(direction * 400.f * deltaTime);
 }

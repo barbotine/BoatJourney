@@ -9,7 +9,6 @@ vector<Shark> SharkManager::createSharks(Texture& sharkText1, Texture& sharkText
 
     sharks.push_back(shark);
     sharks.push_back(shark2);
-    sharks.push_back(shark3);
 
     return sharks;
 }
