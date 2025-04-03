@@ -130,14 +130,14 @@ int main()
 
         Game game = Game();
 
-        Color buttonFillColor(205, 133, 63); // Marron clair
-        Color buttonOutlineColor(139, 69, 19); // Marron foncé
+        Color buttonFillColor(205, 133, 63);
+        Color buttonOutlineColor(139, 69, 19);
 
-        Button solarActivityButton = Button(900, 900, 150, 50, buttonFillColor, "Solar recharge");
+        Button solarActivityButton = Button(1000, 950, 200, 50, buttonFillColor, "Solar recharge");
         solarActivityButton.setOutlineColor(buttonOutlineColor);
         solarActivityButton.setOutlineThickness(3);
 
-        Button eatingActivityButton = Button(700, 900, 150, 50, buttonFillColor, "Eating");
+        Button eatingActivityButton = Button(750, 950, 200, 50, buttonFillColor, "Eating");
         eatingActivityButton.setOutlineColor(buttonOutlineColor);
         eatingActivityButton.setOutlineThickness(3);
 
@@ -157,7 +157,7 @@ int main()
         Resource solarEnergy = Resource(Vector2f(1750.f, 780.f), solarEnergyTexture, Vector2f(1750.f, 780.f), character.getSolarResource());
         Resource lifespan = Resource(Vector2f(1750.f, 850.f), heartTexture, Vector2f(1750.f, 850.f), character.getLifespan());
         Resource foodSupply = Resource(Vector2f(1750.f, 900.f), foodSupplyTexture, Vector2f(1750.f, 950.f), character.getFoodSupply());
-        Shark shark = Shark(Vector2f(1900.f, 900.f), sharkTexture, 300.f);
+        Shark shark = Shark(Vector2f(1900.f, 1000.f), sharkTexture, 300.f);
 
         SharkManager sharkService = SharkManager();
         vector<Shark> sharks = sharkService.createSharks(sharkTexture, sharkTexture2, sharkTexture2);
@@ -215,33 +215,36 @@ int main()
                         if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
                         {
                             std::cout << "Collision détectée !" << std::endl;
+                            isSomeSharkColliding = true;
                             if (!shark.getSharkBoatCollisionDetected())
                             {
                                 character.losingLifeSpan(game);
                                 lifespan.setText(character.getLifespan());
-                                shark.setSharkBoatCollisionDetected(true);
+                                shark.setSharkBoatCollisionDetected(true); 
                             }
-                            isSomeSharkColliding = true;
                         }
                         else
                         {
                             shark.setSharkBoatCollisionDetected(false);
                         }
-
-                        if (shark.getIsSharkAlive() && Utils::isClicked(shark.getSprite(), window, shark.getWasSharkPressed())) {
+                    }
+                    for (Shark& shark : sharks)
+                    {
+                        if (shark.getIsActive() && Utils::isClicked(shark.getSprite(), window, shark.getWasSharkPressed())) {
                             shark.incrementeClick();
                             if (shark.getSharkClicks() >= shark.getSharkMaxClicks()) {
                                 shark.makeSharkDisappear(currentTime);
                                 shark.setSharkClicks(0);
+
                             }
                         }
                     }
+
                     if (isSomeSharkColliding)
                     {
                         boat.getSprite().setColor(Color::Red);
                     }
-                    else
-                    {
+                    else {
                         boat.getSprite().setColor(Color::White);
                     }
                    
@@ -255,8 +258,6 @@ int main()
                             fish.makeFishDisappear(currentTime);
                         }
                     }
-
-                  
 
                     if (hungerBar.GetCurrentHunger() == 0)
                     {

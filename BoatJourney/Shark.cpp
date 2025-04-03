@@ -21,13 +21,13 @@ void Shark::makeSharkAppear(float currentTime)
         {
             float respawnX = 1900.0f;
 
-            float minY = 700.0f;
-            float maxY = 900.0f;
+            float minY = 900.0f;
+            float maxY = 1000.0f;
             float randomY = minY + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxY - minY)));
 
 
             float minX = 1900.f;
-            float maxX = 5000.f;
+            float maxX = 7000.f;
             float randomX = minX + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxX - minX)));
 
             sprite.setPosition(Vector2f(randomX, randomY));
