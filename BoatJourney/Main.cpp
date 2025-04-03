@@ -214,7 +214,7 @@ int main()
                     {
                         if (shark.getSprite().getGlobalBounds().findIntersection(boat.getSprite().getGlobalBounds()))
                         {
-                            std::cout << "Collision détectée !" << std::endl;
+                            
                             
                             if (!shark.getSharkBoatCollisionDetected())
                             {
@@ -222,6 +222,7 @@ int main()
                                 character.losingLifeSpan(game);
                                 lifespan.setText(character.getLifespan());
                                 shark.setSharkBoatCollisionDetected(true); 
+                                std::cout << "Collision détectée !" << std::endl;
                             }
                         }
                         else

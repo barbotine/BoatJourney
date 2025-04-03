@@ -55,7 +55,7 @@ void Character::gettingFish()
 
 void Character::losingLifeSpan(Game& game)
 {
-    if (lifespan > 1)
+    if (lifespan > 0)
     {
         lifespan--;
     }
